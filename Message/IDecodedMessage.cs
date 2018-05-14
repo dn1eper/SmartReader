@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Message
+namespace SmartReader.Message
 {
     interface IDecodedMessage
     {

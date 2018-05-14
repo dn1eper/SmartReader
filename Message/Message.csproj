@@ -7,7 +7,7 @@
     <ProjectGuid>{D7C75C6E-DC20-40D1-8137-F1D89E62B6FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Message</RootNamespace>
+    <RootNamespace>SmartReader.Message</RootNamespace>
     <AssemblyName>Message</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -44,7 +44,7 @@
     <Compile Include="IEncodedMessage.cs" />
     <Compile Include="MessageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleMessage.cs" />
+    <Compile Include="Implementations\SimpleMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

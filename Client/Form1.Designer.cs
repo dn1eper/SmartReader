@@ -1,4 +1,4 @@
-﻿namespace Client
+﻿namespace SmartReader.Client
 {
     partial class Form1
     {
