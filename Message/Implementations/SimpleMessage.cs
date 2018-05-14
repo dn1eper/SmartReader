@@ -34,10 +34,11 @@ namespace SmartReader.Message.Implementation
         /// </summary>
         /// <param name="paramName">Название параметра</param>
         /// <param name="paramValue">Значение параметра</param>
-        public void Add(string paramName, string paramValue)
+        public IEncodedMessage Add(string paramName, string paramValue)
         {
             // Итоговое сообщение будет всегда завершаться tokenSeparator
             message += paramName + paramSeparator + paramValue + tokenSeparator;
+            return this as IEncodedMessage;
         }
         /// <summary>
         /// Берёт первый символ - код сообщения (число)
@@ -65,9 +66,9 @@ namespace SmartReader.Message.Implementation
         {
             return message.Encode(type);
         }
-        public void Add(string paramName, string paramValue)
+        public IEncodedMessage Add(string paramName, string paramValue)
         {
-            message.Add(paramName, paramValue);
+            return message.Add(paramName, paramValue);
         }
     }
     public class SimpleDecodedMessage : IDecodedMessage

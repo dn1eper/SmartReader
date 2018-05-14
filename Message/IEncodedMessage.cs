@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Message
 {
-    interface IEncodedMessage
+    public interface IEncodedMessage
     {
         byte[] Encode(MessageTypes type);
-        void Add(string paramName, string paramValue);
+        IEncodedMessage Add(string paramName, string paramValue);
     }
 }
