@@ -28,56 +28,99 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-            System.Windows.Forms.ToolStripMenuItem eixitToolStripMenuItem;
-            System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ToolStripMenuItem openMenuItem;
+            System.Windows.Forms.ToolStripMenuItem eixitMenuItem;
+            System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
+            System.Windows.Forms.ToolStripMenuItem settingsMenuItem;
+            System.Windows.Forms.ToolStripMenuItem libraryMenuItem;
+            System.Windows.Forms.ToolStripMenuItem accountMenuItem;
+            this.bookmarksMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addBookmarkMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.libraryToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.bookmarksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addBookmarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.navigationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nextPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.previousPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loginToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bookContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.nextPageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previousPageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            eixitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previousPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nextPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            eixitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            libraryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            accountMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
+            this.bookContextMenu.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // openToolStripMenuItem
+            // openMenuItem
             // 
-            openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            openToolStripMenuItem.Text = "&Open";
-            openToolStripMenuItem.Click += new System.EventHandler(this.OnFileOpen);
+            openMenuItem.Name = "openMenuItem";
+            openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            openMenuItem.Size = new System.Drawing.Size(180, 22);
+            openMenuItem.Text = "&Open";
+            openMenuItem.Click += new System.EventHandler(this.OnFileOpen);
             // 
-            // eixitToolStripMenuItem
+            // eixitMenuItem
             // 
-            eixitToolStripMenuItem.Name = "eixitToolStripMenuItem";
-            eixitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            eixitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            eixitToolStripMenuItem.Text = "&Eixit";
-            eixitToolStripMenuItem.Click += new System.EventHandler(this.OnExit);
+            eixitMenuItem.Name = "eixitMenuItem";
+            eixitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            eixitMenuItem.Size = new System.Drawing.Size(180, 22);
+            eixitMenuItem.Text = "&Eixit";
+            eixitMenuItem.Click += new System.EventHandler(this.OnExit);
             // 
-            // aboutToolStripMenuItem
+            // aboutMenuItem
             // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            aboutToolStripMenuItem.Text = "&About";
-            aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutDialog);
+            aboutMenuItem.Name = "aboutMenuItem";
+            aboutMenuItem.Size = new System.Drawing.Size(180, 22);
+            aboutMenuItem.Text = "&About";
+            aboutMenuItem.Click += new System.EventHandler(this.OnAboutDialog);
+            // 
+            // settingsMenuItem
+            // 
+            settingsMenuItem.Name = "settingsMenuItem";
+            settingsMenuItem.Size = new System.Drawing.Size(180, 22);
+            settingsMenuItem.Text = "&Settings";
+            // 
+            // libraryMenuItem
+            // 
+            libraryMenuItem.Name = "libraryMenuItem";
+            libraryMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            libraryMenuItem.Size = new System.Drawing.Size(194, 22);
+            libraryMenuItem.Text = "&Library";
+            // 
+            // bookmarksMenuItem
+            // 
+            this.bookmarksMenuItem.Enabled = false;
+            this.bookmarksMenuItem.Name = "bookmarksMenuItem";
+            this.bookmarksMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.bookmarksMenuItem.Text = "&Bookmarks";
+            // 
+            // accountMenuItem
+            // 
+            accountMenuItem.Name = "accountMenuItem";
+            accountMenuItem.Size = new System.Drawing.Size(180, 22);
+            accountMenuItem.Text = "&Account";
+            // 
+            // addBookmarkMenuItem
+            // 
+            this.addBookmarkMenuItem.Enabled = false;
+            this.addBookmarkMenuItem.Name = "addBookmarkMenuItem";
+            this.addBookmarkMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.addBookmarkMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.addBookmarkMenuItem.Text = "&Add bookmark";
             // 
             // menuStrip
             // 
@@ -85,7 +128,6 @@
             this.fileToolStripMenuItem,
             this.libraryToolStripMenuItem,
             this.navigationToolStripMenuItem,
-            this.accountToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -96,9 +138,10 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            openToolStripMenuItem,
-            this.settingsToolStripMenuItem,
-            eixitToolStripMenuItem});
+            openMenuItem,
+            accountMenuItem,
+            settingsMenuItem,
+            eixitMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
@@ -106,71 +149,48 @@
             // libraryToolStripMenuItem
             // 
             this.libraryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.libraryToolStripMenuItem1,
-            this.bookmarksToolStripMenuItem,
-            this.addBookmarkToolStripMenuItem});
+            libraryMenuItem,
+            this.bookmarksMenuItem,
+            this.addBookmarkMenuItem});
             this.libraryToolStripMenuItem.Name = "libraryToolStripMenuItem";
             this.libraryToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.libraryToolStripMenuItem.Text = "&View";
             // 
-            // libraryToolStripMenuItem1
-            // 
-            this.libraryToolStripMenuItem1.Name = "libraryToolStripMenuItem1";
-            this.libraryToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.libraryToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.libraryToolStripMenuItem1.Text = "&Library";
-            // 
-            // bookmarksToolStripMenuItem
-            // 
-            this.bookmarksToolStripMenuItem.Name = "bookmarksToolStripMenuItem";
-            this.bookmarksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.bookmarksToolStripMenuItem.Text = "&Bookmarks";
-            // 
-            // addBookmarkToolStripMenuItem
-            // 
-            this.addBookmarkToolStripMenuItem.Name = "addBookmarkToolStripMenuItem";
-            this.addBookmarkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.addBookmarkToolStripMenuItem.Text = "&Add bookmark";
-            // 
             // navigationToolStripMenuItem
             // 
-            this.navigationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.nextPageToolStripMenuItem,
-            this.previousPageToolStripMenuItem});
+            this.navigationToolStripMenuItem.DropDown = this.bookContextMenu;
             this.navigationToolStripMenuItem.Name = "navigationToolStripMenuItem";
             this.navigationToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.navigationToolStripMenuItem.Text = "&Navigation";
             // 
-            // nextPageToolStripMenuItem
+            // bookContextMenu
             // 
-            this.nextPageToolStripMenuItem.Name = "nextPageToolStripMenuItem";
-            this.nextPageToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.nextPageToolStripMenuItem.Text = "&Next page";
+            this.bookContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nextPageMenuItem,
+            this.previousPageMenuItem});
+            this.bookContextMenu.Name = "bookContextMenu";
+            this.bookContextMenu.Size = new System.Drawing.Size(149, 48);
             // 
-            // previousPageToolStripMenuItem
+            // nextPageMenuItem
             // 
-            this.previousPageToolStripMenuItem.Name = "previousPageToolStripMenuItem";
-            this.previousPageToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.previousPageToolStripMenuItem.Text = "&Previous page";
+            this.nextPageMenuItem.Enabled = false;
+            this.nextPageMenuItem.Name = "nextPageMenuItem";
+            this.nextPageMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.nextPageMenuItem.Text = "&Next page";
+            this.nextPageMenuItem.Click += new System.EventHandler(this.OnNextPage);
             // 
-            // accountToolStripMenuItem
+            // previousPageMenuItem
             // 
-            this.accountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loginToolStripMenuItem1});
-            this.accountToolStripMenuItem.Name = "accountToolStripMenuItem";
-            this.accountToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
-            this.accountToolStripMenuItem.Text = "&Account";
-            // 
-            // loginToolStripMenuItem1
-            // 
-            this.loginToolStripMenuItem1.Name = "loginToolStripMenuItem1";
-            this.loginToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
-            this.loginToolStripMenuItem1.Text = "&Login";
+            this.previousPageMenuItem.Enabled = false;
+            this.previousPageMenuItem.Name = "previousPageMenuItem";
+            this.previousPageMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.previousPageMenuItem.Text = "&Previous page";
+            this.previousPageMenuItem.Click += new System.EventHandler(this.OnPreviousPage);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            aboutToolStripMenuItem});
+            aboutMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -194,8 +214,8 @@
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(39, 17);
-            this.statusLabel.Text = "Ready";
+            this.statusLabel.Size = new System.Drawing.Size(43, 17);
+            this.statusLabel.Text = "Offline";
             // 
             // progressBar
             // 
@@ -204,6 +224,7 @@
             // 
             // richTextBox
             // 
+            this.richTextBox.ContextMenuStrip = this.bookContextMenu;
             this.richTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.richTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
@@ -214,12 +235,34 @@
             this.richTextBox.Size = new System.Drawing.Size(704, 395);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
+            this.richTextBox.SizeChanged += new System.EventHandler(this.OnResize);
             // 
-            // settingsToolStripMenuItem
+            // previousPageToolStripMenuItem
             // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.settingsToolStripMenuItem.Text = "&Settings";
+            this.previousPageToolStripMenuItem.Name = "previousPageToolStripMenuItem";
+            this.previousPageToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.previousPageToolStripMenuItem.Text = "&Previous page";
+            this.previousPageToolStripMenuItem.Click += new System.EventHandler(this.OnPreviousPage);
+            // 
+            // nextPageToolStripMenuItem
+            // 
+            this.nextPageToolStripMenuItem.Name = "nextPageToolStripMenuItem";
+            this.nextPageToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.nextPageToolStripMenuItem.Text = "&Next page";
+            this.nextPageToolStripMenuItem.Click += new System.EventHandler(this.OnNextPage);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Text = "toolStripMenuItem1";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItem2.Text = "&Previous page";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.OnPreviousPage);
             // 
             // MainForm
             // 
@@ -234,6 +277,7 @@
             this.Text = "SmartReader";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.bookContextMenu.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -247,20 +291,21 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem libraryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loginToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem navigationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nextPageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem previousPageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem libraryToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem bookmarksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addBookmarkToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.RichTextBox richTextBox;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previousPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nextPageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem nextPageMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem previousPageMenuItem;
+        private System.Windows.Forms.ContextMenuStrip bookContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem addBookmarkMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bookmarksMenuItem;
     }
 }
 
