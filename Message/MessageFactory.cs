@@ -1,14 +1,12 @@
-﻿using SmartReader.Message.Implementation;
+﻿using SmartReader.Message.Implementations;
 
 namespace SmartReader.Message
 {
     public static class MessageFactory
     {
-        public static IEncodedMessage MakeAuthenticateMessage(string login, string password)
+        public static IMessage MakeAuthenticateMessage(string login, string password)
         {
-            return new SimpleEncodedMessage()
-                .Add("login", login)
-                .Add("password", password);
+            return new AuthenticationMessage(login, password);
         }
     }
 }

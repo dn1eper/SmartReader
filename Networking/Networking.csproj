@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7C75C6E-DC20-40D1-8137-F1D89E62B6FA}</ProjectGuid>
+    <ProjectGuid>{66D9C67A-13FE-4E9D-8906-A9CF43FA91A4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartReader.Message</RootNamespace>
-    <AssemblyName>Message</AssemblyName>
+    <RootNamespace>SmartReader.Networking</RootNamespace>
+    <AssemblyName>Networking</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,12 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDecodedMessage.cs" />
-    <Compile Include="IEncodedMessage.cs" />
-    <Compile Include="MessageFactory.cs" />
-    <Compile Include="MessageTypes.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Implementations\SimpleMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
