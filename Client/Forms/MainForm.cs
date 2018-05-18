@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Model;
+using Library;
 
 namespace Client.Forms
 {
     public partial class MainForm : Form
     {
         private Book book;
-        private int PageSize => richTextBox.Width * richTextBox.Height / 14 / 14 / 4;
 
         public MainForm()
         {
@@ -39,10 +30,10 @@ namespace Client.Forms
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (book != null) book.Dispose();
-                book = new Book(openFileDialog.FileName, PageSize);
+                if (book != null) book.Close();
+                book = new Book(openFileDialog.FileName, richTextBox.Width, richTextBox.Height);
 
-                richTextBox.Text = book.NextPage();
+                OnNextPage();
                 OnBookOpend();
             }
         }
@@ -57,10 +48,11 @@ namespace Client.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
-            richTextBox.Text = book.ReloadPage(PageSize);
+            richTextBox.Text = book.ReloadPage(richTextBox.Width, richTextBox.Height);
         }
 
-        private void OnNextPage(object sender, EventArgs e)
+        private void OnNextPage(object sender, EventArgs e) => OnNextPage();
+        private void OnNextPage()
         {
             richTextBox.Text = book.NextPage();
         }

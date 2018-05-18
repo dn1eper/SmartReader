@@ -227,7 +227,7 @@
             this.richTextBox.ContextMenuStrip = this.bookContextMenu;
             this.richTextBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.richTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.richTextBox.Font = new System.Drawing.Font("Arial", 14F);
             this.richTextBox.Location = new System.Drawing.Point(0, 24);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
