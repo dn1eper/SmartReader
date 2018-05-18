@@ -7,6 +7,8 @@ namespace Library
     class BookReader : IDisposable
     {
         private const int BUFFER_SIZE = 65536;  // 64 Kb
+        public const string LINE_AFTER_LAST = "<EOF/>";
+        public const string LINE_BEFORE_FIRST = "<SOF/>";
 
         private FileStream stream;
         private Encoding encoding;
@@ -60,7 +62,7 @@ namespace Library
         private bool endOfFile => BaseOffset + BUFFER_SIZE >= stream.Length;
         private bool startOfFile => BaseOffset == 0;
         /// <summary>
-        /// Является ли последяя строка последней
+        /// Является ли последяя считанная строка последней в файле
         /// </summary>
         public bool IsLastLine { get; private set; }
 
@@ -96,7 +98,7 @@ namespace Library
                     if (lineLength == 0)
                     {
                         IsLastLine = true;
-                        return "<EOF/>";
+                        return LINE_AFTER_LAST;
                     }
                     // Получаем следующую строку
                     string line = encoding.GetString(buffer, BufferOffset, lineLength);
@@ -104,28 +106,23 @@ namespace Library
                     if (offset > 1) return ReadLine(offset - 1);
                     else return line;
                 }
-                else if (offset < 0)
-                {
-                    // Получаем предыдущую строку
-                    BufferOffset += lineLength;
-                    if (linePosition == 0) return "<SOF/>";
-                    else if (IsLastLine)
-                    {
-                        IsLastLine = false;
-                        return ReadLine(1);
-                    }
-                    linePosition = GetLine(false);
-                    lineLength = linePosition - BufferOffset;
-                    BufferOffset += lineLength;
-
-                    if (offset < -1) return ReadLine(offset + 1);
-                    else return ReadLine(1);
-                }
-                //else return encoding.GetString(buffer, BufferOffset, lineLength);
-                else return null;
-                
             }
-            else return null;
+            return null;
+        }
+
+        /// <summary>
+        /// Сдвигает внутренний указатель на указанное число строк
+        /// </summary>
+        /// <param name="index">Число строк</param>
+        public void Offset(int index)
+        {
+            int linePosition = GetLine(index >= 0);
+            if (linePosition != -1)
+            {
+                BufferOffset = linePosition;
+                if (index > 1) Offset(index - 1);
+                else if (index < -1) Offset(index + 1);
+            }
         }
 
         /// <summary>

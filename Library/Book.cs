@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Library
 {
@@ -14,7 +11,21 @@ namespace Library
 
         private int pageWidth;
         private int pageHeight;
+        private int LineWidth => pageWidth / 9;
+        private int LinesCount => pageHeight / 22;
+        private int LinesOnPreviousPage;
+        private int linesOnCurrentPage;
+        private int LinesOnCurrentPage
+        {
+            get => linesOnCurrentPage;
+            set
+            {
+                if (value == 0) LinesOnPreviousPage = linesOnCurrentPage;
+                linesOnCurrentPage = value;
+            }
+        }
 
+        private string ErrorMessage => @"Oops.. ¯\_(ツ)_/¯";
 
         /// <summary>
         /// Имя файла книжки
@@ -42,13 +53,39 @@ namespace Library
         }
 
         /// <summary>
-        /// Возвращает следующую страницу книги
+        /// Возвращает следующую страницу книги построчно
         /// </summary>
-        public string NextPage()
+        public IEnumerable<string> NextPageEnum()
         {
-            string line = bookReader.ReadLine();
-            if (line == null) return @"Oops.. ¯\_(ツ)_/¯";
-            else return line;
+            int lineWidth = LineWidth;
+            int linesCount = LinesCount;
+            LinesOnCurrentPage = 0;
+            string line;
+            
+            while (true)
+            {
+                line = bookReader.ReadLine();
+                if (line == null)
+                {
+                    yield return ErrorMessage;
+                    break;
+                }
+                else if (line == BookReader.LINE_AFTER_LAST) break;
+                linesCount -= (int)Math.Ceiling((double)line.Length / lineWidth);
+                if (linesCount >= 0)
+                {
+                    LinesOnCurrentPage++;
+                    yield return line;
+                    if (linesCount == 0) break;
+                }
+                else
+                {
+                    // TODO: реализовать частичный вывод строк
+                    // если на экран не помещается строка целиком
+                    bookReader.Offset(-1);
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -56,9 +93,17 @@ namespace Library
         /// </summary>
         public string PreviousPage()
         {
-            string line = bookReader.ReadLine(-1);
-            if (line == null) return @"Oops.. ¯\_(ツ)_/¯";
-            else return line;
+            bookReader.Offset(-1 * (LinesOnCurrentPage + LinesOnPreviousPage));
+            return NextPage();
+        }
+
+        /// <summary>
+        /// Возвращает следующую страницу сплошным текстом
+        /// </summary>
+        public string NextPage()
+        {
+            if (bookReader.IsLastLine) bookReader.Offset(-1 * linesOnCurrentPage);
+            return String.Concat(NextPageEnum());
         }
 
         /// <summary>
@@ -68,7 +113,10 @@ namespace Library
         /// <param name="pageHeight">Высота страницы</param>
         public string ReloadPage(int pageWidth, int pageHeight)
         {
-            return bookReader.ReadLine(0);
+            this.pageWidth = pageWidth;
+            this.pageHeight = pageHeight;
+            bookReader.Offset(-1 * linesOnCurrentPage);
+            return NextPage();
         }
 
         /// <summary>

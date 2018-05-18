@@ -69,7 +69,7 @@
             // 
             openMenuItem.Name = "openMenuItem";
             openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            openMenuItem.Size = new System.Drawing.Size(180, 22);
+            openMenuItem.Size = new System.Drawing.Size(146, 22);
             openMenuItem.Text = "&Open";
             openMenuItem.Click += new System.EventHandler(this.OnFileOpen);
             // 
@@ -77,21 +77,21 @@
             // 
             eixitMenuItem.Name = "eixitMenuItem";
             eixitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            eixitMenuItem.Size = new System.Drawing.Size(180, 22);
+            eixitMenuItem.Size = new System.Drawing.Size(146, 22);
             eixitMenuItem.Text = "&Eixit";
             eixitMenuItem.Click += new System.EventHandler(this.OnExit);
             // 
             // aboutMenuItem
             // 
             aboutMenuItem.Name = "aboutMenuItem";
-            aboutMenuItem.Size = new System.Drawing.Size(180, 22);
+            aboutMenuItem.Size = new System.Drawing.Size(107, 22);
             aboutMenuItem.Text = "&About";
             aboutMenuItem.Click += new System.EventHandler(this.OnAboutDialog);
             // 
             // settingsMenuItem
             // 
             settingsMenuItem.Name = "settingsMenuItem";
-            settingsMenuItem.Size = new System.Drawing.Size(180, 22);
+            settingsMenuItem.Size = new System.Drawing.Size(146, 22);
             settingsMenuItem.Text = "&Settings";
             // 
             // libraryMenuItem
@@ -101,18 +101,18 @@
             libraryMenuItem.Size = new System.Drawing.Size(194, 22);
             libraryMenuItem.Text = "&Library";
             // 
+            // accountMenuItem
+            // 
+            accountMenuItem.Name = "accountMenuItem";
+            accountMenuItem.Size = new System.Drawing.Size(146, 22);
+            accountMenuItem.Text = "&Account";
+            // 
             // bookmarksMenuItem
             // 
             this.bookmarksMenuItem.Enabled = false;
             this.bookmarksMenuItem.Name = "bookmarksMenuItem";
             this.bookmarksMenuItem.Size = new System.Drawing.Size(194, 22);
             this.bookmarksMenuItem.Text = "&Bookmarks";
-            // 
-            // accountMenuItem
-            // 
-            accountMenuItem.Name = "accountMenuItem";
-            accountMenuItem.Size = new System.Drawing.Size(180, 22);
-            accountMenuItem.Text = "&Account";
             // 
             // addBookmarkMenuItem
             // 
@@ -131,7 +131,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(704, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1264, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -169,6 +169,7 @@
             this.nextPageMenuItem,
             this.previousPageMenuItem});
             this.bookContextMenu.Name = "bookContextMenu";
+            this.bookContextMenu.OwnerItem = this.navigationToolStripMenuItem;
             this.bookContextMenu.Size = new System.Drawing.Size(149, 48);
             // 
             // nextPageMenuItem
@@ -205,9 +206,9 @@
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel,
             this.progressBar});
-            this.statusStrip.Location = new System.Drawing.Point(0, 419);
+            this.statusStrip.Location = new System.Drawing.Point(0, 659);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(704, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1264, 22);
             this.statusStrip.TabIndex = 1;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -232,7 +233,7 @@
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
             this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox.Size = new System.Drawing.Size(704, 395);
+            this.richTextBox.Size = new System.Drawing.Size(1264, 635);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
             this.richTextBox.SizeChanged += new System.EventHandler(this.OnResize);
@@ -268,11 +269,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 441);
+            this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
+            this.MinimumSize = new System.Drawing.Size(320, 240);
             this.Name = "MainForm";
             this.Text = "SmartReader";
             this.menuStrip.ResumeLayout(false);

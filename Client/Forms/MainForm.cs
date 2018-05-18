@@ -7,10 +7,12 @@ namespace Client.Forms
     public partial class MainForm : Form
     {
         private Book book;
+        private bool IsBookOpend => book != null;
 
         public MainForm()
         {
             InitializeComponent();
+            richTextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
         }
 
         private void OnExit(object sender, EventArgs e) => Close();
@@ -48,18 +50,28 @@ namespace Client.Forms
 
         private void OnResize(object sender, EventArgs e)
         {
+            if (!IsBookOpend) return;
             richTextBox.Text = book.ReloadPage(richTextBox.Width, richTextBox.Height);
         }
 
         private void OnNextPage(object sender, EventArgs e) => OnNextPage();
         private void OnNextPage()
         {
+            if (!IsBookOpend) return;
             richTextBox.Text = book.NextPage();
         }
 
-        private void OnPreviousPage(object sender, EventArgs e)
+        private void OnPreviousPage(object sender, EventArgs e) => OnPreviousPage();
+        private void OnPreviousPage()
         {
+            if (!IsBookOpend) return;
             richTextBox.Text = book.PreviousPage();
+        }
+
+        private void OnMouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0) OnPreviousPage();
+            else OnNextPage();
         }
     }
 }
