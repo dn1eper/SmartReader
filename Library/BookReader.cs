@@ -121,7 +121,6 @@ namespace Library
                 if (index < 0)
                 {
                     IsLastLine = false;
-                    index--;
                 }
                 else return;
             }
