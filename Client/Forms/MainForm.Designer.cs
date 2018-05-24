@@ -54,6 +54,7 @@
             this.nextPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             eixitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -151,7 +152,8 @@
             this.libraryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             libraryMenuItem,
             this.bookmarksMenuItem,
-            this.addBookmarkMenuItem});
+            this.addBookmarkMenuItem,
+            this.fullScreenToolStripMenuItem});
             this.libraryToolStripMenuItem.Name = "libraryToolStripMenuItem";
             this.libraryToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.libraryToolStripMenuItem.Text = "&View";
@@ -169,7 +171,6 @@
             this.nextPageMenuItem,
             this.previousPageMenuItem});
             this.bookContextMenu.Name = "bookContextMenu";
-            this.bookContextMenu.OwnerItem = this.navigationToolStripMenuItem;
             this.bookContextMenu.Size = new System.Drawing.Size(149, 48);
             // 
             // nextPageMenuItem
@@ -265,6 +266,13 @@
             this.toolStripMenuItem2.Text = "&Previous page";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.OnPreviousPage);
             // 
+            // fullScreenToolStripMenuItem
+            // 
+            this.fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
+            this.fullScreenToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.fullScreenToolStripMenuItem.Text = "Full Screen";
+            this.fullScreenToolStripMenuItem.Click += new System.EventHandler(this.OnFullScreen);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -308,6 +316,7 @@
         private System.Windows.Forms.ContextMenuStrip bookContextMenu;
         private System.Windows.Forms.ToolStripMenuItem addBookmarkMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bookmarksMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fullScreenToolStripMenuItem;
     }
 }
 

@@ -9,10 +9,13 @@ namespace Client.Forms
         private Book book;
         private bool IsBookOpend => book != null;
 
+        private bool IsFullScreen { get; set; }
+
         public MainForm()
         {
             InitializeComponent();
             richTextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
+            IsFullScreen = false;
         }
 
         private void OnExit(object sender, EventArgs e) => Close();
@@ -72,6 +75,21 @@ namespace Client.Forms
         {
             if (e.Delta > 0) OnPreviousPage();
             else OnNextPage();
+        }
+
+        private void OnFullScreen(object sender, EventArgs e)
+        {
+            if (IsFullScreen)
+            {
+                FormBorderStyle = FormBorderStyle.Sizable;
+                WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                FormBorderStyle = FormBorderStyle.None;
+                WindowState = FormWindowState.Maximized;
+            }
+            IsFullScreen = !IsFullScreen;
         }
     }
 }
