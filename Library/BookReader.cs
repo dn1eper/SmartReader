@@ -34,7 +34,7 @@ namespace Library
                 }
                 else if (value < BUFFER_SIZE * 0.1 && !startOfFile)
                 {
-                    // Буферизация следующего участка книги при приближении указателя к концу буфера
+                    // Буферизация предыдущего участка книги при приближении указателя к началу буфера
                     BaseOffset = value - BUFFER_SIZE / 2;
                     if (BaseOffset < 0)
                     {
@@ -46,7 +46,7 @@ namespace Library
                 }
                 else if (value > BUFFER_SIZE * 0.9 && !endOfFile)
                 {
-                    // Буферизация предыдущего участка книги при приближении указателя к началу буфера
+                    // Буферизация следующего участка книги при приближении указателя к концу буфера
                     BaseOffset = value - BUFFER_SIZE / 3;
                     bufferOffset = BUFFER_SIZE / 3;
                     LoadBuffer();
@@ -116,6 +116,15 @@ namespace Library
         /// <param name="index">Число строк</param>
         public void Offset(int index)
         {
+            if (IsLastLine)
+            {
+                if (index < 0)
+                {
+                    IsLastLine = false;
+                    index--;
+                }
+                else return;
+            }
             int linePosition = GetLine(index >= 0);
             if (linePosition != -1)
             {
@@ -146,7 +155,12 @@ namespace Library
             else return null;
         }
 
-        private void LoadBuffer() => stream.Read(buffer, BaseOffset, BUFFER_SIZE);
+        private void LoadBuffer()
+        {
+            int size = endOfFile ? (int)stream.Length - BaseOffset : BUFFER_SIZE;
+            stream.Seek(BaseOffset, SeekOrigin.Begin);
+            stream.Read(buffer, 0, size);
+        }
 
         private int GetLineUnicode(bool direction, bool test = false)
         {

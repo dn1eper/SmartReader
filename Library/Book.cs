@@ -6,6 +6,15 @@ namespace Library
 {
     public class Book : IDisposable
     {
+        // TODO: добавить вывод текущей страницы и общего числа страниц.
+
+        // TODO: переработать метод PreviousPage.
+        // он делает не корректное смещение на более чем одну страницу
+        // так как основывается на LinesOnPreviousPage (только предыдущая страница)
+
+        // TODO: устранить ошибку, при которой переход на предыдущую страницу с самой
+        // последней осуществляется не совсем корректно.
+
         private FileInfo file;
         private BookReader bookReader;
 
