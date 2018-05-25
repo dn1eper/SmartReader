@@ -66,6 +66,7 @@ namespace Library
 
         public void Save()
         {
+            file.Delete();
             using (Stream stream = file.OpenWrite())
             {
                 serializer.Serialize(stream, Books);

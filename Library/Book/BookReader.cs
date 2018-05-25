@@ -32,7 +32,7 @@ namespace Library.Book
                     else if (encoding == Encoding.UTF8) bufferOffset = 3;
                     else bufferOffset = 0;
                 }
-                else if (value < BUFFER_SIZE * 0.1 && !startOfFile)
+                else if (value < bufferOffset && value < BUFFER_SIZE * 0.1 && !startOfFile)
                 {
                     // Буферизация предыдущего участка книги при приближении указателя к началу буфера
                     BaseOffset = value - BUFFER_SIZE / 2;
@@ -60,7 +60,7 @@ namespace Library.Book
         public int BaseOffset { get; private set; }
 
         private bool endOfFile => BaseOffset + BUFFER_SIZE >= stream.Length;
-        private bool startOfFile => BaseOffset == 0;
+        private bool startOfFile => BaseOffset < 5;
         /// <summary>
         /// Является ли последяя считанная строка последней в файле
         /// </summary>

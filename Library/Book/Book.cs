@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
 
 namespace Library.Book
 {
@@ -64,13 +63,13 @@ namespace Library.Book
         {
             get
             {
-                if (IsOpend) return bookReader.BaseOffset + bookReader.BufferOffset;
+                if (IsOpend) return bookReader.BaseOffset + _offset;
                 else return -1;
             }
         }
 
         /// <summary>
-        /// Возвращает запись для сохранения
+        /// Возвращает запись о книге для сохранения
         /// </summary>
         public BookRecord BookRecord
         {
@@ -133,6 +132,7 @@ namespace Library.Book
         {
             if (IsOpend)
             {
+                _offset = bookReader.BufferOffset;
                 int lineWidth = LineWidth;
                 int linesCount = LinesCount;
                 LinesOnCurrentPage = 0;
