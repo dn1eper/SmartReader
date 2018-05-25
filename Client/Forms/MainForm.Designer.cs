@@ -48,7 +48,6 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.previousPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nextPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,6 +100,7 @@
             libraryMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
             libraryMenuItem.Size = new System.Drawing.Size(194, 22);
             libraryMenuItem.Text = "&Library";
+            libraryMenuItem.Click += new System.EventHandler(this.OnLibraryDialog);
             // 
             // accountMenuItem
             // 
@@ -205,8 +205,7 @@
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel,
-            this.progressBar});
+            this.statusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 659);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1264, 22);
@@ -218,11 +217,6 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(43, 17);
             this.statusLabel.Text = "Offline";
-            // 
-            // progressBar
-            // 
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(100, 16);
             // 
             // richTextBox
             // 
@@ -305,7 +299,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.RichTextBox richTextBox;
         private System.Windows.Forms.ToolStripMenuItem previousPageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nextPageToolStripMenuItem;

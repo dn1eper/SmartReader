@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Library
+namespace Library.Book
 {
     class BookReader : IDisposable
     {
@@ -21,10 +21,10 @@ namespace Library
         /// приближении к началу или к концу буфера.
         /// Указывает на начало новой строки.
         /// </summary>
-        private int BufferOffset
+        public int BufferOffset
         {
             get => bufferOffset;
-            set
+            private set
             {
                 if (value == 0 && startOfFile)
                 {
@@ -65,6 +65,7 @@ namespace Library
         /// Является ли последяя считанная строка последней в файле
         /// </summary>
         public bool IsLastLine { get; private set; }
+
 
         /// <summary>
         /// Реализует построчное чтение книжки с автоопределением кодировки 
@@ -132,6 +133,7 @@ namespace Library
                 else if (index < -1) Offset(index + 1);
             }
         }
+
 
         /// <summary>
         /// Определяет кодировку текста

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 
-namespace Library
+namespace Library.Book
 {
     public class Book : IDisposable
     {
@@ -18,10 +19,15 @@ namespace Library
         private FileInfo file;
         private BookReader bookReader;
 
+        public event EventHandler BookOpend;
+        public event EventHandler BookClosed;
+
         private int pageWidth;
         private int pageHeight;
         private int LineWidth => pageWidth / 9;
-        private int LinesCount => pageHeight / 22;
+        private int LinesCount => pageHeight / 24;
+        private int _offset;
+        // TODO: Избыточные поля, желаетльно от них избавиться
         private int LinesOnPreviousPage;
         private int linesOnCurrentPage;
         private int LinesOnCurrentPage
@@ -42,9 +48,42 @@ namespace Library
         public string Name => Path.GetFileNameWithoutExtension(file.Name);
 
         /// <summary>
+        /// Полное имя файла книжки
+        /// </summary>
+        public string FullName => file.FullName;
+
+        /// <summary>
         /// Открыта ли книжка
         /// </summary>
         public bool IsOpend => bookReader != null;
+
+        /// <summary>
+        /// Возвращает смещение текущей страницы от начала
+        /// </summary>
+        public int Offset
+        {
+            get
+            {
+                if (IsOpend) return bookReader.BaseOffset + bookReader.BufferOffset;
+                else return -1;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает запись для сохранения
+        /// </summary>
+        public BookRecord BookRecord
+        {
+            get
+            {
+                return new BookRecord()
+                {
+                    Path = FullName,
+                    Offset = Offset
+                };
+            }
+        }
+        
 
         /// <summary>
         /// Выполняет инициализацию книжки
@@ -56,9 +95,35 @@ namespace Library
         public Book(string path, int pageWidth, int pageHeight, int offset = 0)
         {
             file = new FileInfo(path);
-            bookReader = new BookReader(file, offset);
+            _offset = offset;
             this.pageWidth = pageWidth;
             this.pageHeight = pageHeight;
+        }
+        /// <summary>
+        /// Выполняет инициализацию книжки
+        /// </summary>
+        /// <param name="record">Запись о книжке</param>
+        /// <param name="pageWidth">Ширина страницы</param>
+        /// <param name="pageHeight">Высота страницы</param>
+        public Book(BookRecord record, int pageWidth, int pageHeight)
+        {
+            file = new FileInfo(record.Path);
+            _offset = record.Offset;
+            this.pageWidth = pageWidth;
+            this.pageHeight = pageHeight;
+        }
+
+
+        /// <summary>
+        /// Открывает книжку для чтения
+        /// </summary>
+        public void Open()
+        {
+            if (!IsOpend)
+            {
+                bookReader = new BookReader(file, _offset);
+                BookOpend(this, new EventArgs());
+            }
         }
 
         /// <summary>
@@ -66,35 +131,39 @@ namespace Library
         /// </summary>
         public IEnumerable<string> NextPageEnum()
         {
-            int lineWidth = LineWidth;
-            int linesCount = LinesCount;
-            LinesOnCurrentPage = 0;
-            string line;
-            
-            while (true)
+            if (IsOpend)
             {
-                line = bookReader.ReadLine();
-                if (line == null)
+                int lineWidth = LineWidth;
+                int linesCount = LinesCount;
+                LinesOnCurrentPage = 0;
+                string line;
+
+                while (true)
                 {
-                    yield return ErrorMessage;
-                    break;
-                }
-                else if (line == BookReader.LINE_AFTER_LAST) break;
-                linesCount -= (int)Math.Ceiling((double)line.Length / lineWidth);
-                if (linesCount >= 0)
-                {
-                    LinesOnCurrentPage++;
-                    yield return line;
-                    if (linesCount == 0) break;
-                }
-                else
-                {
-                    // TODO: реализовать частичный вывод строк
-                    // если на экран не помещается строка целиком
-                    bookReader.Offset(-1);
-                    break;
+                    line = bookReader.ReadLine();
+                    if (line == null)
+                    {
+                        yield return ErrorMessage;
+                        break;
+                    }
+                    else if (line == BookReader.LINE_AFTER_LAST) break;
+                    linesCount -= (int)Math.Ceiling((double)line.Length / lineWidth);
+                    if (linesCount >= 0)
+                    {
+                        LinesOnCurrentPage++;
+                        yield return line;
+                        if (linesCount == 0) break;
+                    }
+                    else
+                    {
+                        // TODO: реализовать частичный вывод строк
+                        // если на экран не помещается строка целиком
+                        bookReader.Offset(-1);
+                        break;
+                    }
                 }
             }
+            else yield return null;
         }
 
         /// <summary>
@@ -102,6 +171,7 @@ namespace Library
         /// </summary>
         public string PreviousPage()
         {
+            if (!IsOpend) return null;
             bookReader.Offset(-1 * (LinesOnCurrentPage + LinesOnPreviousPage));
             return NextPage();
         }
@@ -111,6 +181,7 @@ namespace Library
         /// </summary>
         public string NextPage()
         {
+            if (!IsOpend) return null;
             if (bookReader.IsLastLine) bookReader.Offset(-1 * linesOnCurrentPage);
             return String.Concat(NextPageEnum());
         }
@@ -122,6 +193,7 @@ namespace Library
         /// <param name="pageHeight">Высота страницы</param>
         public string ReloadPage(int pageWidth, int pageHeight)
         {
+            if (!IsOpend) return null;
             this.pageWidth = pageWidth;
             this.pageHeight = pageHeight;
             bookReader.Offset(-1 * linesOnCurrentPage);
@@ -133,16 +205,12 @@ namespace Library
         /// </summary>
         public void Close()
         {
-            Dispose();
-            bookReader = null;
-        }
-
-        /// <summary>
-        /// Сохраняет на диск информацию о книжке (смещение)
-        /// </summary>
-        public void Save()
-        {
-            // TODO
+            if (IsOpend)
+            {
+                BookClosed(this, new EventArgs());
+                Dispose();
+                bookReader = null;
+            }
         }
 
         /// <summary>
