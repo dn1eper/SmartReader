@@ -23,8 +23,17 @@ namespace Client.Forms
             // Открываем последнюю книгу
             if (Storage.Books.Count > 0)
             {
-                BookOpen(Storage.Books[Storage.Books.Count - 1]);
+                OpenBook(Storage.Books[Storage.Books.Count - 1]);
             }
+        }
+
+        private void OpenBook(BookRecord bookRecord)
+        {
+            book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
+            book.BookOpend += OnBookOpend;
+            book.BookClosed += OnBookClosed;
+            book.Open();
+            Storage.AddBook(bookRecord);
         }
 
         // Выход из приложения
@@ -50,9 +59,15 @@ namespace Client.Forms
         // Диалог библиотеки (список всех книг)
         private void OnLibraryDialog(object sender, EventArgs e)
         {
-            using (LibraryForm dialog = new LibraryForm(Storage.Books))
+            using (LibraryForm libraryDialog = new LibraryForm(Storage.Books))
             {
-                dialog.ShowDialog();
+                if (libraryDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Закрываем открытую книгу если нужно
+                    if (IsBookOpend) book.Close();
+                    // Открываем выбранную книгу
+                    OpenBook(libraryDialog.SelectedBook);
+                }
             }
         }
 
@@ -66,15 +81,8 @@ namespace Client.Forms
                 // Если эту книжку уже открывали, то нужно октыть ее с сохнененным смещением
                 // для этого нужно получить запись для этой книжки из хранилища
                 BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName);
-                BookOpen(bookRecord);
+                OpenBook(bookRecord);
             }
-        }
-        private void BookOpen(BookRecord bookRecord)
-        {
-            book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
-            book.BookOpend += OnBookOpend;
-            book.BookClosed += OnBookClosed;
-            book.Open();
         }
 
         // Действия при открытии книжки

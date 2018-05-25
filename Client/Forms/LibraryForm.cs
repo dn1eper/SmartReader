@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Library.Book;
 
@@ -13,18 +10,29 @@ namespace Client.Forms
 {
     public partial class LibraryForm : Form
     {
+        public BookRecord SelectedBook
+        {
+            get
+            {
+                string path = dataGridView.SelectedRows[0].Cells[2].Value as string;
+                int index = Books.IndexOf(new BookRecord() { Path = path, Offset = 0 });
+                return Books[index];
+            }
+        }
+
+        private List<BookRecord> Books;
+
         public LibraryForm(List<BookRecord> books)
         {
             InitializeComponent();
-            //dataGridView.Rows.Add();
-        }
-
-        private void OnCancel(object sender, EventArgs e) => Close();
-
-        private void OnSelect(object sender, EventArgs e)
-        {
-            // TODO: open selected book
-            Close();
+            Books = books;
+            Books.Reverse();
+            // Создаем таблицу с книгами
+            int index = 0;
+            foreach (BookRecord book in Books)
+            {
+                dataGridView.Rows.Add(++index, System.IO.Path.GetFileNameWithoutExtension(book.Path), book.Path);
+            }
         }
     }
 }
