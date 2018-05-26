@@ -1,33 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Library.Book;
+using SmartReader.Library.Book;
 
-namespace Library
+namespace SmartReader.Library.Storage
 {
-    public class LibraryStorage
+    public class LibraryStorage : XmlStorage
     {
-        private string PATH => @"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader";
-        private string FILE_NAME => "lib.xml";
-
-        private FileInfo file;
-        private XmlSerializer serializer;
         public List<BookRecord> Books { get; private set; }
 
-        public LibraryStorage()
+        public LibraryStorage() : 
+            base(@"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader",
+                "lib.xml",
+                typeof(List<BookRecord>))
         {
-            // Создание директории для хранения файла, если ее нет
-            if (!Directory.Exists(PATH)) Directory.CreateDirectory(PATH);
-            // Определяем путь файла лицензии
-            file = new FileInfo(PATH + @"\" + FILE_NAME);
-            // Инициализируем сериализатор
-            Type type = typeof(List<BookRecord>);
-            serializer = new XmlSerializer(type);
-            // Загружаем информацию о книжках из файла в память
+            Load();
+        }
+
+        public override void Load()
+        {
             if (file.Exists)
             {
                 using (Stream stream = file.OpenRead())
@@ -64,7 +55,7 @@ namespace Library
             else return bookRecord;
         }
 
-        public void Save()
+        public override void Save()
         {
             file.Delete();
             using (Stream stream = file.OpenWrite())
@@ -72,7 +63,5 @@ namespace Library
                 serializer.Serialize(stream, Books);
             }
         }
-
-        public void Close() => Save();
     }
 }

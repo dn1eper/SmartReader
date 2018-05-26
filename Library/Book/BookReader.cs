@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Library.Book
+namespace SmartReader.Library.Book
 {
     class BookReader : IDisposable
     {

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Windows.Forms;
-using Library;
-using Library.Book;
 using System.Net.Sockets;
+using System.Windows.Forms;
+using SmartReader.Library.Storage;
+using SmartReader.Library.Book;
 using SmartReader.Message;
+using SmartReader.Message.Implementations;
 using SmartReader.Networking;
 using SmartReader.Networking.Events;
 
@@ -15,8 +16,10 @@ namespace Client.Forms
 
         private Book book;
         private LibraryStorage Storage;
+        private ConfigStorage Config;
         private IConnection Connection;
         private bool IsBookOpend => book != null;
+        private bool IsConnected => Connection != null;
 
         public MainForm()
         {
@@ -25,6 +28,7 @@ namespace Client.Forms
             IsFullScreen = false;
             // Инициализируем локальное хранилище
             Storage = new LibraryStorage();
+            Config = new ConfigStorage();
             // Открываем последнюю книгу
             if (Storage.Books.Count > 0)
             {
@@ -45,7 +49,7 @@ namespace Client.Forms
 
         private void ConnectServer()
         {
-            if (Connection == null)
+            if (!IsConnected)
             {
                 try
                 {
@@ -67,12 +71,21 @@ namespace Client.Forms
 
         private void Login(string login, string password)
         {
-            // TODO: Login user
+            if (IsConnected)
+            {
+                IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
+                Connection.Send(message);
+            }
         }
 
         private void Register(string login, string password, string email)
         {
-            // TODO: register user
+            if (IsConnected)
+            {
+                // TODO: register user
+                //IMessage message = MessageFactory.MakeRegistrationMessage(login, password);
+                //Connection.Send(message);
+            }
         }
 
 
@@ -229,7 +242,14 @@ namespace Client.Forms
         // Обработка входящих сообщений от сервера
         private void OnIncomingMessage(object sender, MessageEventArgs e)
         {
-            // TODO: обработка сообщений
+            IMessage message = e.Message as IMessage;
+            switch (message.Type)
+            {
+                // TODO: обработка сообщений
+                case MessageTypes.Status:
+                    statusLabel.Text = (message as StatusMessage).Text;
+                    break;
+            }
         }
 
         // Обработка закрытия соеденения с сервером

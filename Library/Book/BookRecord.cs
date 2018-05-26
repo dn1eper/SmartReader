@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Library.Book
+namespace SmartReader.Library.Book
 {
     [Serializable]
     public class BookRecord

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Library.Book
+namespace SmartReader.Library.Book
 {
     public class Book : IDisposable
     {
