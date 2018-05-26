@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Message
 {
-    public interface IMessage
+    public enum Status
     {
-        DateTime CreatedAt { get; } // За ненадобностью - убрать.
-        MessageTypes Type { get; }
+        Ok,
+        Error
     }
 }

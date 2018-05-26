@@ -4,9 +4,15 @@ using SmartReader.Message;
 using SmartReader.Networking.Events;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace SmartReader.Networking.Implementations
 {
+    /// <summary>
+    /// Используется для отправки и приёма сообщения.
+    /// Вероятно будет использоваться как на клиенте, так и на сервере.
+    /// Для обработки входящих сообщений необходимо использовать событие MessageReceived.
+    /// </summary>
     class SocketConnection : IConnection
     {
         Socket socket;
@@ -20,7 +26,10 @@ namespace SmartReader.Networking.Implementations
         }
         public void Open()
         {
-            throw new NotImplementedException();
+            Thread thread = new Thread(ThreadProc);
+            thread.IsBackground = true;
+            thread.Start();
+
         }
         public void Close()
         {
@@ -28,6 +37,15 @@ namespace SmartReader.Networking.Implementations
             Dispose();
         }
 
+        /// <summary>
+        /// Так как в качестве слушателя используется tcpconnection,
+        /// то в одном tcp-сегменте могут прийти несколько сообщений.
+        /// Поэтому для удобства выборки сообщений инкапсулируем их в 
+        /// коллекцию, для каждого сообщения которой вызываем обработчик.
+        /// 
+        /// Таким образом достигается независимость от времени и количества
+        /// полученных за раз сообщений.
+        /// </summary>
         private void ThreadProc()
         {
             try
@@ -37,7 +55,7 @@ namespace SmartReader.Networking.Implementations
                     IEnumerable<IMessage> messages = Receive();
                     foreach (IMessage message in messages)
                     {
-                        OnMessageRevieved(new MessageEventArgs(message));
+                        OnMessageReceived(new MessageEventArgs(message));
                     }
                 }
             }
@@ -67,13 +85,13 @@ namespace SmartReader.Networking.Implementations
             socket.Send(Utilities.Serialization.Serialize(message));
         }
 
-                #region EventsCalling
+        #region EventsCalling
         protected void OnClosed(EventArgs e)
         {
             Closed?.Invoke(this, e);
         }
 
-        protected void OnMessageRevieved(MessageEventArgs e)
+        protected void OnMessageReceived(MessageEventArgs e)
         {
             MessageReceived?.Invoke(this, e);
         }

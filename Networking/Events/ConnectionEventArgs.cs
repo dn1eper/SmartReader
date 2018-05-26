@@ -8,5 +8,11 @@ namespace SmartReader.Networking.Events
 {
     public class ConnectionEventArgs : EventArgs
     {
+        public IConnection Connection;
+
+        public ConnectionEventArgs(IConnection connection)
+        {
+            Connection = connection;
+        }
     }
 }

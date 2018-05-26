@@ -3,7 +3,7 @@ using SmartReader.Message;
 namespace SmartReader.Message.Implementations
 {
     [Serializable]
-    class AuthenticationMessage : IMessage
+    public class AuthenticationMessage : IMessage
     {
         private long createdAt;
         public DateTime CreatedAt
