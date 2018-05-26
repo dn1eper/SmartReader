@@ -18,9 +18,14 @@ namespace SmartReader.Message
             return new StatusMessage(status, text);
         }
 
-        public static IMessage MakeAuthenticateResponseMessage(string token)
+        public static IMessage MakeAuthenticateTokenMessage(string token)
         {
-            return new AuthenticateResponseMessage(token);
+            return new AuthenticateTokenMessage(token);
+        }
+
+        public static IMessage MakeRegistrationMessage(string login, string password, string email)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

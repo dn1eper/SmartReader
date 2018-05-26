@@ -30,13 +30,27 @@ namespace SmartReader.Library.Storage
 
         public string GetValue(string name)
         {
-            ConfigRecord configRecord = new ConfigRecord()
+            ConfigRecord config = new ConfigRecord()
             {
                 Name = name,
                 Value = ""
             };
-            if (Configs.Contains(configRecord)) return Configs[Configs.IndexOf(configRecord)].Value;
+            if (Configs.Contains(config)) return Configs[Configs.IndexOf(config)].Value;
             else return "";
+        }
+
+        public void SetValue(string name, string value)
+        {
+            ConfigRecord config = new ConfigRecord()
+            {
+                Name = name,
+                Value = value
+            };
+            if (Configs.Contains(config))
+            {
+                Configs.Remove(config);
+            }
+            Configs.Add(config);
         }
 
         public override void Save()

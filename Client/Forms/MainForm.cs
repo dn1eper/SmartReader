@@ -13,6 +13,9 @@ namespace Client.Forms
     public partial class MainForm : Form
     {
         // TODO: вывод в statusLabel номера страницы
+        // TODO: OnIncomingMessage
+        // TODO: уведомления о событиях (успешной или ошибочной регистрации, 
+        // успешном или ошибочном входе, ошибке при загрузке книжки и т.д.
 
         private Book book;
         private LibraryStorage Storage;
@@ -60,6 +63,13 @@ namespace Client.Forms
                     // Вешаем обработчики
                     Connection.MessageReceived += OnIncomingMessage;
                     Connection.Closed += OnConnectionClosed;
+                    // Если есть сохраненный ранее токен, то отсылаем его
+                    string token = Config.GetValue("Token");
+                    if (token != "")
+                    {
+                        IMessage message = MessageFactory.MakeAuthenticateTokenMessage(token);
+                        Connection.Send(message);
+                    }
                 }
                 catch (SocketException e)
                 {
@@ -82,9 +92,8 @@ namespace Client.Forms
         {
             if (IsConnected)
             {
-                // TODO: register user
-                //IMessage message = MessageFactory.MakeRegistrationMessage(login, password);
-                //Connection.Send(message);
+                IMessage message = MessageFactory.MakeRegistrationMessage(login, password, email);
+                Connection.Send(message);
             }
         }
 
@@ -160,7 +169,7 @@ namespace Client.Forms
         }
         #endregion
 
-        #region Обработчики событий
+        #region Оконные события
         // Выход из приложения
         private void OnExit(object sender, EventArgs e)
         {
@@ -168,6 +177,7 @@ namespace Client.Forms
             {
                 book.Close();
                 Storage.Save();
+                Config.Save();
             }
             Close();
         }
@@ -238,7 +248,9 @@ namespace Client.Forms
             }
             IsFullScreen = !IsFullScreen;
         }
+        #endregion
 
+        #region Сетевые события
         // Обработка входящих сообщений от сервера
         private void OnIncomingMessage(object sender, MessageEventArgs e)
         {
@@ -247,7 +259,11 @@ namespace Client.Forms
             {
                 // TODO: обработка сообщений
                 case MessageTypes.Status:
-                    statusLabel.Text = (message as StatusMessage).Text;
+                    string status = (message as StatusMessage).Text;
+                    statusLabel.Text = status;
+                    break;
+                case MessageTypes.AuthenticateToken:
+                    // Принимаем token
                     break;
             }
         }
