@@ -40,12 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDecodedMessage.cs" />
-    <Compile Include="IEncodedMessage.cs" />
+    <Compile Include="IMessage.cs" />
+    <Compile Include="Implementations\AuthenticationMessage.cs" />
     <Compile Include="MessageFactory.cs" />
     <Compile Include="MessageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Implementations\SimpleMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

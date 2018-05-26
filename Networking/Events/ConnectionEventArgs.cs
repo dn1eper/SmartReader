@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Networking.Events
 {
-    class ConnectionEventArgs
+    public class ConnectionEventArgs : EventArgs
     {
     }
 }

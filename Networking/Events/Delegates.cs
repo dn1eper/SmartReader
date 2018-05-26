@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Networking.Events
 {
-    class Delegates
-    {
-    }
+    public delegate void MessageEventHandler(object sender, MessageEventArgs e);
+    public delegate void ConnectionEventHandler(object sender, ConnectionEventArgs e);
 }

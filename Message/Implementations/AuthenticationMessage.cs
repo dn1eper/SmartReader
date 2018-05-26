@@ -2,6 +2,7 @@
 using SmartReader.Message;
 namespace SmartReader.Message.Implementations
 {
+    [Serializable]
     class AuthenticationMessage : IMessage
     {
         private long createdAt;
