@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMessage.cs" />
+    <Compile Include="Implementations\AuthenticateResponseMessage.cs" />
     <Compile Include="Implementations\AuthenticationMessage.cs" />
     <Compile Include="Implementations\StatusMessage.cs" />
     <Compile Include="MessageFactory.cs" />
