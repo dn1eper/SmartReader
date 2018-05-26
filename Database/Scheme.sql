@@ -12,9 +12,9 @@ CREATE TABLE person (
 );
 
 CREATE TABLE bookmark (
-	book_id INT,
+	book_id INT PRIMARY KEY,
 	remark TEXT,
-	offset INT UNSIGNED,
+	offset INT UNSIGNED NOT NULL,
 	FOREIGN KEY (book_id)
 	REFERENCES book(book_id) ON DELETE CASCADE
 );
