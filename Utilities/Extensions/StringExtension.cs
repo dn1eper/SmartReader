@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace System.Text
 {
@@ -12,6 +7,11 @@ namespace System.Text
         public static Stream ToStream(this string s)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(s));
+        }
+
+        public static bool IsEmpty(this string text)
+        {
+            return text.Trim().Length == 0;
         }
     }
 }

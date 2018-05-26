@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Client.Extensions;
+using System.Text;
 
 namespace Client.Forms
 {

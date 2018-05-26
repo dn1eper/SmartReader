@@ -2,6 +2,9 @@
 using System.Windows.Forms;
 using Library;
 using Library.Book;
+using SmartReader.Message;
+using SmartReader.Networking;
+using SmartReader.Networking.Events;
 
 namespace Client.Forms
 {
@@ -11,6 +14,7 @@ namespace Client.Forms
 
         private Book book;
         private LibraryStorage Storage;
+        private IConnection Connection;
         private bool IsBookOpend => book != null;
 
         public MainForm()
@@ -25,6 +29,8 @@ namespace Client.Forms
             {
                 OpenBook(Storage.Books[Storage.Books.Count - 1]);
             }
+            // Пытаемся подключится к серверу
+            ConnectServer();
         }
 
         private void OpenBook(BookRecord bookRecord)
@@ -34,6 +40,15 @@ namespace Client.Forms
             book.BookClosed += OnBookClosed;
             book.Open();
             Storage.AddBook(bookRecord);
+        }
+
+        private void ConnectServer()
+        {
+            if (Connection == null)
+            {
+                // TODO: ...
+                //Connection = NetworkingFactory.OpenConnection("localhost", 8080);
+            }
         }
 
         private void Login(string login, string password)
