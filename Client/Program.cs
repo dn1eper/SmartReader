@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Client.Forms;
 
-namespace Client
+namespace SmartReader.Client
 {
     static class Program
     {
