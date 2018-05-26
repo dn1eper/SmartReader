@@ -38,20 +38,16 @@ namespace Client.Forms
 
         private void Login(string login, string password)
         {
-            // TODO: ...
+            // TODO: Login user
         }
 
-        // Выход из приложения
-        private void OnExit(object sender, EventArgs e)
+        private void Register(string login, string password, string email)
         {
-            if (IsBookOpend)
-            {
-                book.Close();
-                Storage.Save();
-            }
-            Close();
+            // TODO: register user
         }
 
+
+        #region Диалоги
         // Диалог о программе
         private void OnAboutDialog(object sender, EventArgs e)
         {
@@ -98,9 +94,15 @@ namespace Client.Forms
         // Диалог регистрации
         private void OnRegisterDialog(object sender, EventArgs e)
         {
-            // TODO: ...
+            using (RegisterForm registerDialog = new RegisterForm())
+            {
+                if (registerDialog.ShowDialog() == DialogResult.OK)
+                {
+                    Register(registerDialog.Login, registerDialog.Password, registerDialog.Email);
+                }
+            }
         }
-
+        
         // Диалог открытия txt файла книжки
         private void OnFileOpen(object sender, EventArgs e)
         {
@@ -113,6 +115,19 @@ namespace Client.Forms
                 BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName);
                 OpenBook(bookRecord);
             }
+        }
+        #endregion
+
+        #region Обработчики событий
+        // Выход из приложения
+        private void OnExit(object sender, EventArgs e)
+        {
+            if (IsBookOpend)
+            {
+                book.Close();
+                Storage.Save();
+            }
+            Close();
         }
 
         // Действия при открытии книжки
@@ -181,6 +196,6 @@ namespace Client.Forms
             }
             IsFullScreen = !IsFullScreen;
         }
-
+        #endregion
     }
 }
