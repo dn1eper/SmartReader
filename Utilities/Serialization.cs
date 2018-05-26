@@ -71,7 +71,7 @@ namespace Utilities
 
         public static IEnumerable<IMessage> Deserialize(Stream stream)
         {
-            return serializer.Deserialize(stream);
+            return serializer.Deserialize(stream as MemoryStream);
         }
         #endregion
 
