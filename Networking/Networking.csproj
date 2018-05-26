@@ -47,6 +47,7 @@
     <Compile Include="IConnectionListener.cs" />
     <Compile Include="Implementations\SocketConnection.cs" />
     <Compile Include="Implementations\SocketConnectionListener.cs" />
+    <Compile Include="NetworkingFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

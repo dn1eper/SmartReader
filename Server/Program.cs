@@ -19,7 +19,8 @@ namespace Server
             listener.Open();
             Console.WriteLine("Server started. Press Enter to stop it.");
             Console.Read();
-            // TODO handle closing database connections and tcp connections
+            // TODO закрывать соединение с базой
+            // TODO закрывать TCP-соединения
         }
 
         private static void OnIncomingConnection(object sender, ConnectionEventArgs e)
@@ -44,7 +45,13 @@ namespace Server
         /// <param name="e"></param>
         private static void OnIncomingMessage(object sender, MessageEventArgs e)
         {
-            
+            IMessage message = e.Message as IMessage;
+            switch (message.Type)
+            {
+                case MessageTypes.Authenticate:
+                    MessageHandler.HandleAuthentication(message, sender as IConnection);
+                    break;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace SmartReader.Message
 {
     public interface IMessage
     {
-        DateTime CreatedAt { get; }
+        DateTime CreatedAt { get; } // За ненадобностью - убрать.
         MessageTypes Type { get; }
     }
 }
