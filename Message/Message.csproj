@@ -43,9 +43,11 @@
   <ItemGroup>
     <Compile Include="IMessage.cs" />
     <Compile Include="Implementations\AuthenticationMessage.cs" />
+    <Compile Include="Implementations\StatusMessage.cs" />
     <Compile Include="MessageFactory.cs" />
     <Compile Include="MessageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatusEnum.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,7 +23,7 @@ namespace SmartReader.Message
         AddBook,
         DeleteBook,
         AddBookmark,
-        DeleteBookmark
+        DeleteBookmark,
+        Status
     }
-    
 }
