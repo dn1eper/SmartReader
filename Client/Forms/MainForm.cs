@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Library;
 using Library.Book;
+using System.Net.Sockets;
 using SmartReader.Message;
 using SmartReader.Networking;
 using SmartReader.Networking.Events;
@@ -46,8 +47,21 @@ namespace Client.Forms
         {
             if (Connection == null)
             {
-                // TODO: ...
-                //Connection = NetworkingFactory.OpenConnection("localhost", 8080);
+                try
+                {
+                    // Создаем подключение к серверу
+                    Connection = NetworkingFactory.OpenConnection("localhost", 8080);
+                    Connection.Open();
+                    statusLabel.Text = "Online";
+                    // Вешаем обработчики
+                    Connection.MessageReceived += OnIncomingMessage;
+                    Connection.Closed += OnConnectionClosed;
+                }
+                catch (SocketException e)
+                {
+                    Connection = null;
+                }
+
             }
         }
 
@@ -210,6 +224,19 @@ namespace Client.Forms
                 WindowState = FormWindowState.Maximized;
             }
             IsFullScreen = !IsFullScreen;
+        }
+
+        // Обработка входящих сообщений от сервера
+        private void OnIncomingMessage(object sender, MessageEventArgs e)
+        {
+            // TODO: обработка сообщений
+        }
+
+        // Обработка закрытия соеденения с сервером
+        private void OnConnectionClosed(object sender, EventArgs e)
+        {
+            Connection = null;
+            statusLabel.Text = "Disconnected";
         }
         #endregion
     }
