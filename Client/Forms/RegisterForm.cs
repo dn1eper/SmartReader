@@ -4,14 +4,16 @@ using Client.Extensions;
 
 namespace Client.Forms
 {
-    public partial class AccountForm : Form
+    public partial class RegisterForm : Form
     {
-        private bool CanAccept => !nameTextBox.Text.IsEmpty() && !passwordTextBox.Text.IsEmpty();
+        private bool CanAccept => !nameTextBox.Text.IsEmpty() && 
+            !passwordTextBox.Text.IsEmpty() && !emailTextBox.Text.IsEmpty();
 
         public string Login => nameTextBox.Text;
         public string Password => passwordTextBox.Text;
+        public string Email => passwordTextBox.Text;
 
-        public AccountForm()
+        public RegisterForm()
         {
             InitializeComponent();
         }
