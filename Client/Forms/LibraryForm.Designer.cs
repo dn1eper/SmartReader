@@ -31,12 +31,12 @@
             System.Windows.Forms.Button okButton;
             System.Windows.Forms.Button cancelButton;
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.groupButtonsBox = new System.Windows.Forms.GroupBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupButtonsBox = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             okButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -89,6 +89,30 @@
             this.dataGridView.Size = new System.Drawing.Size(574, 441);
             this.dataGridView.TabIndex = 0;
             // 
+            // num
+            // 
+            this.num.Frozen = true;
+            this.num.HeaderText = "№";
+            this.num.Name = "num";
+            this.num.ReadOnly = true;
+            this.num.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.num.Width = 50;
+            // 
+            // name
+            // 
+            this.name.Frozen = true;
+            this.name.HeaderText = "Name";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            this.name.Width = 480;
+            // 
+            // Path
+            // 
+            this.Path.HeaderText = "Path";
+            this.Path.Name = "Path";
+            this.Path.ReadOnly = true;
+            this.Path.Visible = false;
+            // 
             // groupButtonsBox
             // 
             this.groupButtonsBox.Controls.Add(this.button4);
@@ -122,34 +146,12 @@
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // num
-            // 
-            this.num.Frozen = true;
-            this.num.HeaderText = "№";
-            this.num.Name = "num";
-            this.num.ReadOnly = true;
-            this.num.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.num.Width = 50;
-            // 
-            // name
-            // 
-            this.name.Frozen = true;
-            this.name.HeaderText = "Name";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            this.name.Width = 480;
-            // 
-            // Path
-            // 
-            this.Path.HeaderText = "Path";
-            this.Path.Name = "Path";
-            this.Path.ReadOnly = true;
-            this.Path.Visible = false;
-            // 
             // LibraryForm
             // 
+            this.AcceptButton = okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(574, 441);
             this.Controls.Add(this.groupButtonsBox);
             this.Controls.Add(this.dataGridView);

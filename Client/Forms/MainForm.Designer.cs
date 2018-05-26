@@ -40,6 +40,7 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.libraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.navigationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bookContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nextPageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +54,6 @@
             this.nextPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.fullScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             eixitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +69,7 @@
             // 
             openMenuItem.Name = "openMenuItem";
             openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            openMenuItem.Size = new System.Drawing.Size(146, 22);
+            openMenuItem.Size = new System.Drawing.Size(180, 22);
             openMenuItem.Text = "&Open";
             openMenuItem.Click += new System.EventHandler(this.OnFileOpen);
             // 
@@ -77,7 +77,7 @@
             // 
             eixitMenuItem.Name = "eixitMenuItem";
             eixitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            eixitMenuItem.Size = new System.Drawing.Size(146, 22);
+            eixitMenuItem.Size = new System.Drawing.Size(180, 22);
             eixitMenuItem.Text = "&Eixit";
             eixitMenuItem.Click += new System.EventHandler(this.OnExit);
             // 
@@ -91,7 +91,7 @@
             // settingsMenuItem
             // 
             settingsMenuItem.Name = "settingsMenuItem";
-            settingsMenuItem.Size = new System.Drawing.Size(146, 22);
+            settingsMenuItem.Size = new System.Drawing.Size(180, 22);
             settingsMenuItem.Text = "&Settings";
             // 
             // libraryMenuItem
@@ -105,8 +105,10 @@
             // accountMenuItem
             // 
             accountMenuItem.Name = "accountMenuItem";
-            accountMenuItem.Size = new System.Drawing.Size(146, 22);
+            accountMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            accountMenuItem.Size = new System.Drawing.Size(180, 22);
             accountMenuItem.Text = "&Account";
+            accountMenuItem.Click += new System.EventHandler(this.OnAccountDialog);
             // 
             // bookmarksMenuItem
             // 
@@ -157,6 +159,13 @@
             this.libraryToolStripMenuItem.Name = "libraryToolStripMenuItem";
             this.libraryToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.libraryToolStripMenuItem.Text = "&View";
+            // 
+            // fullScreenToolStripMenuItem
+            // 
+            this.fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
+            this.fullScreenToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.fullScreenToolStripMenuItem.Text = "Full Screen";
+            this.fullScreenToolStripMenuItem.Click += new System.EventHandler(this.OnFullScreen);
             // 
             // navigationToolStripMenuItem
             // 
@@ -259,13 +268,6 @@
             this.toolStripMenuItem2.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem2.Text = "&Previous page";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.OnPreviousPage);
-            // 
-            // fullScreenToolStripMenuItem
-            // 
-            this.fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
-            this.fullScreenToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.fullScreenToolStripMenuItem.Text = "Full Screen";
-            this.fullScreenToolStripMenuItem.Click += new System.EventHandler(this.OnFullScreen);
             // 
             // MainForm
             // 

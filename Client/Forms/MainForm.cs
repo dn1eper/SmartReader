@@ -36,6 +36,11 @@ namespace Client.Forms
             Storage.AddBook(bookRecord);
         }
 
+        private void Login(string login, string password)
+        {
+            // TODO: ...
+        }
+
         // Выход из приложения
         private void OnExit(object sender, EventArgs e)
         {
@@ -69,6 +74,31 @@ namespace Client.Forms
                     OpenBook(libraryDialog.SelectedBook);
                 }
             }
+        }
+
+        // Диалог входа в акаунт
+        private void OnAccountDialog(object sender, EventArgs e)
+        {
+            using (AccountForm accountDialog = new AccountForm())
+            {
+                switch (accountDialog.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        // Пытаемся залогинить пользователя
+                        Login(accountDialog.Login, accountDialog.Password);
+                        break;
+                    case DialogResult.Abort:
+                        // Значит нажата кнопка Register, открываем диалог регистрации
+                        OnRegisterDialog(sender, e);
+                        break;
+                }
+            }
+        }
+
+        // Диалог регистрации
+        private void OnRegisterDialog(object sender, EventArgs e)
+        {
+            // TODO: ...
         }
 
         // Диалог открытия txt файла книжки
@@ -151,7 +181,6 @@ namespace Client.Forms
             }
             IsFullScreen = !IsFullScreen;
         }
-
 
     }
 }
