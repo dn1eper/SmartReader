@@ -23,13 +23,14 @@ namespace SmartReader.Networking.Implementations
         {
             listener = new TcpListener(IPAddress.Any, port);
         }
-        public void Close()
+        public void Stop()
         {
             listener.Stop();
         }
 
-        public void Open()
+        public void Start()
         {
+            listener.Start();
             Thread thread = new Thread(ThreadProc);
             thread.IsBackground = true;
             thread.Start();
@@ -48,7 +49,7 @@ namespace SmartReader.Networking.Implementations
             }
             catch (SocketException)
             {
-                Close();
+                Stop();
             }
         }
 

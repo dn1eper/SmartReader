@@ -20,12 +20,16 @@ namespace SmartReader.Message
 
         public static IMessage MakeAuthenticateTokenMessage(string token)
         {
-            return new AuthenticateTokenMessage(){Token = token};
+<<<<<<< HEAD
+            return new AuthenticateTokenMessage(token);
         }
 
         public static IMessage MakeRegistrationMessage(string login, string password, string email)
         {
+            throw new System.NotImplementedException();
+=======
             return new AuthenticateResponseMessage() { Token = token };
+>>>>>>> mrexox
         }
     }
 }

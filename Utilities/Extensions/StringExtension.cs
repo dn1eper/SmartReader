@@ -4,9 +4,15 @@ namespace System.Text
 {
     public static class StringExtension
     {
-        public static Stream ToStream(this string s)
+        public static MemoryStream ToStream(this string s)
         {
-            return new MemoryStream(Encoding.UTF8.GetBytes(s));
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+            //return new MemoryStream(Encoding.Default.GetBytes(s));
         }
 
         public static bool IsEmpty(this string text)

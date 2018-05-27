@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Message.Implementations
 {
-    [Serializable]
+<<<<<<< HEAD:Message/Implementations/AuthenticateTokenMessage.cs
     public class AuthenticateTokenMessage : IMessage
+=======
+    [Serializable]
+    public class AuthenticateResponseMessage : IMessage
+>>>>>>> mrexox:Message/Implementations/AuthenticateResponseMessage.cs
     {
         public DateTime CreatedAt => DateTime.Now;
 
@@ -15,9 +19,12 @@ namespace SmartReader.Message.Implementations
 
         public string Token { get; set; }
 
+<<<<<<< HEAD:Message/Implementations/AuthenticateTokenMessage.cs
         public AuthenticateTokenMessage(string token)
         {
             Token = token;
         }
+=======
+>>>>>>> mrexox:Message/Implementations/AuthenticateResponseMessage.cs
     }
 }

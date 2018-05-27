@@ -67,6 +67,7 @@ namespace SmartReader.Networking.Implementations
 
         private IEnumerable<IMessage> Receive()
         {
+            IEnumerable<IMessage> messages;
             using (MemoryStream stream = new MemoryStream())
             {
                 byte[] buffer = new byte[1024];
@@ -76,8 +77,10 @@ namespace SmartReader.Networking.Implementations
                     stream.Write(buffer, 0, count);
                 } while (stream.Length == 0 || socket.Available > 0);
                 stream.Seek(0, SeekOrigin.Begin);
-                return Utilities.Serialization.Deserialize(stream); // (sic!)
+                byte[] bytes = stream.ToArray();
+                messages = Utilities.Serialization.Deserialize(bytes);
             }
+            return messages;
         }
 
         public void Send(IMessage message)
