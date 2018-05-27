@@ -32,5 +32,9 @@ namespace SmartReader.Message
         {
             return new AuthenticationResponseMessage() { Status = status, Token = token, Message = message};
         }
+        public static IMessage MakeUploadBookMessage(string title, string text, string token)
+        {
+            return new UploadBookMessage() { Title = title, Content = text, Token = token };
+        }
     }
 }

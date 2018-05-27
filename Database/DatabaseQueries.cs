@@ -14,7 +14,7 @@ namespace SmartReader.Database
         private const string GetPersonPassByLoginQuery = "SELECT pass_hash FROM person WHERE login = @Login";
         private const string InsertTokenQuery = "INSERT INTO token (login, token) VALUES (@Login, @Token)";
         private const string GetTokenForLoginQuery = "SELECT token FROM token WHERE login = @Login";
-        
+        private const string GetLoginForTokenQuery = "SELECT login FROM token WHERE token = @Token";
         public void InsertUser(string login, string hashedPassword)
         {
             
@@ -68,6 +68,18 @@ namespace SmartReader.Database
         {
             MySqlCommand cmd = new MySqlCommand(GetTokenForLoginQuery, Conn);
             cmd.Parameters.AddWithValue("@Login", login);
+            return GetOneStringValue(cmd);
+        }
+
+        public string GetLoginFor(string token)
+        {
+            MySqlCommand cmd = new MySqlCommand(GetLoginForTokenQuery, Conn);
+            cmd.Parameters.AddWithValue("@Token", token);
+            return GetOneStringValue(cmd);
+        }
+
+        private string GetOneStringValue(MySqlCommand cmd)
+        {
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 if (reader.Read())

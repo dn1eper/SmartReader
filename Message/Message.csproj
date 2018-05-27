@@ -47,6 +47,7 @@
     <Compile Include="Implementations\AuthenticationResponseMessage.cs" />
     <Compile Include="Implementations\RegistrationMessage.cs" />
     <Compile Include="Implementations\StatusMessage.cs" />
+    <Compile Include="Implementations\UploadBookMessage.cs" />
     <Compile Include="MessageFactory.cs" />
     <Compile Include="MessageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

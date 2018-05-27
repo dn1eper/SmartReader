@@ -40,6 +40,11 @@ namespace SmartReader.Server
         {
             return Hash("001" + login + "rrrd");
         }
+
+        private static void SendStatusError(IConnection connection, string message )
+        {
+            connection.Send(MessageFactory.MakeStatusMessage(Status.Error, message));
+        }
         #endregion
 
         public static void HandleAuthentication(IMessage message, IConnection connection)
@@ -103,6 +108,28 @@ namespace SmartReader.Server
             else
             {
                 connection.Send(MessageFactory.MakeAuthenticationResposeMessage(token));
+            }
+        }
+
+        public static void HandleUploadBook(IMessage message, IConnection connection)
+        {
+            UploadBookMessage bookMessage = message as UploadBookMessage;
+            string login = Conn.GetLoginFor(bookMessage.Token);
+            if (login == null)
+            {
+                SendStatusError(connection, "Вы не авторизовались.");
+                return;
+            }
+
+            // Upload the book
+            try
+            {
+                // TODO реализовать
+                Conn.InsertBookFor(login, bookMessage.Title, bookMessage.Content);
+            }
+            catch (Exception)
+            {
+                // Отловить ошибки
             }
         }
     }
