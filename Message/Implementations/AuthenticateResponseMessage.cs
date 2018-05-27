@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace SmartReader.Message.Implementations
 {
+    [Serializable]
     public class AuthenticateResponseMessage : IMessage
     {
-        public DateTime CreatedAt => throw new NotImplementedException();
+        public DateTime CreatedAt => DateTime.Now;
 
         public MessageTypes Type => MessageTypes.AuthenticateResponse;
 
-        public string Token;
+        public string Token { get; set; }
 
-        public AuthenticateResponseMessage(string token)
-        {
-            Token = token;
-        }
     }
 }

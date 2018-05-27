@@ -10,17 +10,17 @@ namespace SmartReader.Message
         public static IMessage MakeAuthenticateMessage(string login, string password)
         {
             // TODO hash passwords
-            return new AuthenticationMessage(login, password);
+            return new AuthenticationMessage() { Login = login, Password = password };
         }
 
         public static IMessage MakeStatusMessage(Status status, string text)
         {
-            return new StatusMessage(status, text);
+            return new StatusMessage() { Status = status, Text = text };
         }
 
         public static IMessage MakeAuthenticateResponseMessage(string token)
         {
-            return new AuthenticateResponseMessage(token);
+            return new AuthenticateResponseMessage() { Token = token };
         }
     }
 }

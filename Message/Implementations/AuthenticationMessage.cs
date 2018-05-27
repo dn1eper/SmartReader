@@ -12,12 +12,8 @@ namespace SmartReader.Message.Implementations
             set => createdAt = value.ToBinary();
         }
         public MessageTypes Type { get => MessageTypes.Authenticate; }
-        public string Login { get; private set; }
-        public string Password { get; private set; }
-        public AuthenticationMessage(string login, string password)
-        {
-            Login = login;
-            Password = password;
-        }
+        public string Login { get;  set; }
+        public string Password { get; set; }
+      
     }
 }

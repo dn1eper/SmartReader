@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using SmartReader.Message;
 using SmartReader.Message.Implementations;
 using SmartReader.Networking;
+using SmartReader.Database;
 
-namespace Server
+namespace SmartReader.Server
 {
-    class MessageHandler
+    // TODO REMOVE PUBLIC
+    public static partial class Program
     {
+
         public static void HandleAuthentication(IMessage message, IConnection connection)
         {
             AuthenticationMessage authMessage = message as AuthenticationMessage;
-            // TODO Запрос базе с логином и паролем
-            // TODO в случае удачи вернуть сообщение
         }
     }
 }

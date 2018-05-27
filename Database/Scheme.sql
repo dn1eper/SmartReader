@@ -1,5 +1,4 @@
-﻿-- MariaDB script
-
+﻿
 USE smart_reader;
 CREATE TABLE book (
 	book_id INT AUTO_INCREMENT PRIMARY KEY,

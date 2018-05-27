@@ -6,7 +6,7 @@ namespace SmartReader.Networking
     public interface IConnectionListener
     {
         event ConnectionEventHandler ConnectionEstablished;
-        void Open();
-        void Close();
+        void Start();
+        void Stop();
     }
 }
