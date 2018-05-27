@@ -12,6 +12,7 @@ namespace ClientTest
 {
     class Program
     {
+        private static string TOKEN;
         static void Main(string[] args)
         {
 
@@ -28,6 +29,9 @@ namespace ClientTest
                 connection.Send(msg);
                 msg = MessageFactory.MakeAuthenticateMessage("admin1", "asd");
                 connection.Send(msg);
+                Console.ReadLine();
+                msg = MessageFactory.MakeUploadBookMessage("Martin Iden", "Good book!", TOKEN);
+                connection.Send(msg);
                 Console.Read();
                 connection.Close();
             }
@@ -36,12 +40,24 @@ namespace ClientTest
         static void OnMessage(object sender, MessageEventArgs args)
         {
             Console.WriteLine("Ответ получен: тип=" + (int)args.Message.Type);
-            if (args.Message.Type == MessageTypes.AuthenticateResponse)
+            switch (args.Message.Type)
             {
-                Console.WriteLine("Status: "+ (args.Message as AuthenticationResponseMessage).Status);
-                Console.WriteLine("Token: " +(args.Message as AuthenticationResponseMessage).Token);
-                Console.WriteLine("Message: " +(args.Message as AuthenticationResponseMessage).Message);
-                Console.WriteLine();
+
+                case MessageTypes.AuthenticateResponse:
+                    Console.WriteLine("Status: " + (args.Message as AuthenticationResponseMessage).Status);
+                    Console.WriteLine("Token: " + (args.Message as AuthenticationResponseMessage).Token);
+                    Console.WriteLine("Message: " + (args.Message as AuthenticationResponseMessage).Message);
+                    Console.WriteLine();
+                    if (!(args.Message as AuthenticationResponseMessage).Token.IsEmpty())
+                    {
+                        TOKEN = (args.Message as AuthenticationResponseMessage).Token;
+                        Console.WriteLine(TOKEN);
+                    }
+                    break;
+                case MessageTypes.Status:
+                    Console.WriteLine("Status: " + (args.Message as StatusMessage).Status);
+                    Console.WriteLine("Message: " + (args.Message as StatusMessage).Text);
+                    break;
             }
         }
     }

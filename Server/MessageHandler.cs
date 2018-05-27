@@ -45,6 +45,10 @@ namespace SmartReader.Server
         {
             connection.Send(MessageFactory.MakeStatusMessage(Status.Error, message));
         }
+        private static void SendStatusOk(IConnection connection, string message)
+        {
+            connection.Send(MessageFactory.MakeStatusMessage(Status.Ok, message));
+        }
         #endregion
 
         public static void HandleAuthentication(IMessage message, IConnection connection)
@@ -126,10 +130,11 @@ namespace SmartReader.Server
             {
                 // TODO реализовать
                 Conn.InsertBookFor(login, bookMessage.Title, bookMessage.Content);
+                SendStatusOk(connection, "Книга загружена.");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Отловить ошибки
+                SendStatusError(connection, e.Message);
             }
         }
     }

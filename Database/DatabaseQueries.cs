@@ -15,6 +15,8 @@ namespace SmartReader.Database
         private const string InsertTokenQuery = "INSERT INTO token (login, token) VALUES (@Login, @Token)";
         private const string GetTokenForLoginQuery = "SELECT token FROM token WHERE login = @Login";
         private const string GetLoginForTokenQuery = "SELECT login FROM token WHERE token = @Token";
+        private const string InsertBookQuery = "INSERT INTO book (content, title) VALUES (@Content, @Title)";
+        private const string InsertBookLoginQuery = "INSERT INTO book_login (login, book_id) VALUES (@Login, @BookId)";
         public void InsertUser(string login, string hashedPassword)
         {
             
@@ -90,6 +92,34 @@ namespace SmartReader.Database
                 {
                     return null;
                 }
+            }
+        }
+
+        public void InsertBookFor(string login, string title, string content)
+        {
+            MySqlCommand bookCmd = new MySqlCommand(InsertBookQuery, Conn);
+            bookCmd.Parameters.AddWithValue("@Title", title);
+            bookCmd.Parameters.AddWithValue("@Content", content);
+            try
+            {
+                bookCmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Проблема с базой данных. Книга не загружена.");
+            }
+
+            long bookId = bookCmd.LastInsertedId;
+            MySqlCommand bookLoginCmd = new MySqlCommand(InsertBookLoginQuery, Conn);
+            bookLoginCmd.Parameters.AddWithValue("@Login", login);
+            bookLoginCmd.Parameters.AddWithValue("@BookId", bookId);
+            try
+            {
+                bookLoginCmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Проблема с базой данных. Личная информация о книгах не обновлена.");
             }
         }
     }
