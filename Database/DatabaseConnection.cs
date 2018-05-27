@@ -8,10 +8,10 @@ using MySql.Data.MySqlClient;
 
 namespace SmartReader.Database
 {
-    public class Connection
+    public partial class DatabaseConnection
     {
-        MySqlConnection Conn;
-        public Connection(string user, string password, string server = "localhost")
+        private MySqlConnection Conn;
+        public DatabaseConnection(string user, string password, string server = "localhost")
         {
             string connectStr = "Database=smart_reader;Data Source={0};User Id={1};Password={2}";
             Conn = new MySqlConnection(
@@ -22,7 +22,9 @@ namespace SmartReader.Database
         public void NonQuery(string query)
         {
             MySqlCommand command = new MySqlCommand(query, Conn);
+            
             command.ExecuteNonQuery();
         }
+
     }
 }

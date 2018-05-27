@@ -60,6 +60,9 @@ namespace ServerTest
                 case MessageTypes.Authenticate:
                     SmartReader.Server.Program.HandleAuthentication(message, sender as IConnection);
                     break;
+                case MessageTypes.Registration:
+                    SmartReader.Server.Program.HandleRegistration(message, sender as IConnection);
+                    break;
             }
         }
     }

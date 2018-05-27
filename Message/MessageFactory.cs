@@ -25,7 +25,12 @@ namespace SmartReader.Message
 
         public static IMessage MakeRegistrationMessage(string login, string password, string email)
         {
-            return new AuthenticateResponseMessage() { Token = token };
+            return new RegistrationMessage() { Login = login, Password = password };
+        }
+
+        public static IMessage MakeAuthenticationResposeMessage(string token, Status status=Status.Ok, string message="")
+        {
+            return new AuthenticationResponseMessage() { Status = status, Token = token, Message = message};
         }
     }
 }

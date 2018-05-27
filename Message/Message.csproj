@@ -44,6 +44,8 @@
     <Compile Include="IMessage.cs" />
     <Compile Include="Implementations\AuthenticateTokenMessage.cs" />
     <Compile Include="Implementations\AuthenticationMessage.cs" />
+    <Compile Include="Implementations\AuthenticationResponseMessage.cs" />
+    <Compile Include="Implementations\RegistrationMessage.cs" />
     <Compile Include="Implementations\StatusMessage.cs" />
     <Compile Include="MessageFactory.cs" />
     <Compile Include="MessageTypes.cs" />

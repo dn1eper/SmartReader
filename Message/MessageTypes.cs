@@ -18,6 +18,7 @@ namespace SmartReader.Message
     {
         Authenticate,
         AuthenticateToken,
+        AuthenticateResponse,
         Registration,
         GetBookList,
         GetBookmarkList,

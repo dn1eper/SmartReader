@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 namespace SmartReader.Message.Implementations
 {
     [Serializable]
-    public class StatusMessage : IMessage
+    public class RegistrationMessage : IMessage
     {
-        public MessageTypes Type => MessageTypes.Status;
-
-        public Status Status { get; set; }
-        public string Text { get; set; }
-
-      
+        public MessageTypes Type => MessageTypes.Registration;
+        public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

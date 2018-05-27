@@ -10,7 +10,7 @@ namespace SmartReader.Server
     // TODO REMOVE PUBLIC
     public static partial class Program
     {
-        public Connection Conn;
+        public static DatabaseConnection Conn;
         private static List<IConnection> Connections { get; }
         static Program()
         {

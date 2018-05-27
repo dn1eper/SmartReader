@@ -18,9 +18,16 @@ namespace ClientTest
             using (IConnection connection = NetworkingFactory.OpenConnection("localhost", 8080))
             {
                 connection.Open();
-                IMessage msg = MessageFactory.MakeAuthenticateMessage("admin", "password2");
-                connection.Send(msg);
                 connection.MessageReceived += OnMessage;
+                IMessage msg;
+                msg = MessageFactory.MakeRegistrationMessage("admin", "password", "mail@mail.ru");
+                connection.Send(msg);
+                msg = MessageFactory.MakeAuthenticateMessage("admin", "asd");
+                connection.Send(msg);
+                msg = MessageFactory.MakeAuthenticateMessage("admin", "password");
+                connection.Send(msg);
+                msg = MessageFactory.MakeAuthenticateMessage("admin1", "asd");
+                connection.Send(msg);
                 Console.Read();
                 connection.Close();
             }
@@ -29,6 +36,13 @@ namespace ClientTest
         static void OnMessage(object sender, MessageEventArgs args)
         {
             Console.WriteLine("Ответ получен: тип=" + (int)args.Message.Type);
+            if (args.Message.Type == MessageTypes.AuthenticateResponse)
+            {
+                Console.WriteLine("Status: "+ (args.Message as AuthenticationResponseMessage).Status);
+                Console.WriteLine("Token: " +(args.Message as AuthenticationResponseMessage).Token);
+                Console.WriteLine("Message: " +(args.Message as AuthenticationResponseMessage).Message);
+                Console.WriteLine();
+            }
         }
     }
 }
