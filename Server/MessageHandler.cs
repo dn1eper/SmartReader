@@ -84,7 +84,8 @@ namespace SmartReader.Server
             try
             {
                 Conn.InsertUser(regMessage.Login, Hash(regMessage.Password));
-                SendToken(regMessage.Login, connection);
+                //SendToken(regMessage.Login, connection);
+                SendStatusOk(connection, "Вы успешно зарегестрировались!");
             }
             catch(Exception e)
             {

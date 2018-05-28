@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SmartReader.Library.Book;
 
-namespace Client.Forms
+namespace SmartReader.Client.Forms
 {
     public partial class LibraryForm : Form
     {

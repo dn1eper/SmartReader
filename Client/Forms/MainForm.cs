@@ -8,21 +8,23 @@ using SmartReader.Message.Implementations;
 using SmartReader.Networking;
 using SmartReader.Networking.Events;
 
-namespace Client.Forms
+namespace SmartReader.Client.Forms
 {
     public partial class MainForm : Form
     {
         // TODO: вывод в statusLabel номера страницы
         // TODO: OnIncomingMessage
-        // TODO: уведомления о событиях (успешной или ошибочной регистрации, 
-        // успешном или ошибочном входе, ошибке при загрузке книжки и т.д.
 
         private Book book;
         private LibraryStorage Storage;
         private ConfigStorage Config;
-        private IConnection Connection;
         private bool IsBookOpend => book != null;
+
+        private IConnection Connection;
         private bool IsConnected => Connection != null;
+        private string Token;
+        private string Username;
+
 
         public MainForm()
         {
@@ -32,6 +34,9 @@ namespace Client.Forms
             // Инициализируем локальное хранилище
             Storage = new LibraryStorage();
             Config = new ConfigStorage();
+            // Загружаем сохраненный токен
+            Token = Config.GetValue("Token");
+            Username = Config.GetValue("Username");
             // Открываем последнюю книгу
             if (Storage.Books.Count > 0)
             {
@@ -63,15 +68,8 @@ namespace Client.Forms
                     // Вешаем обработчики
                     Connection.MessageReceived += OnIncomingMessage;
                     Connection.Closed += OnConnectionClosed;
-                    // Если есть сохраненный ранее токен, то отсылаем его
-                    string token = Config.GetValue("Token");
-                    if (token != "")
-                    {
-                        IMessage message = MessageFactory.MakeAuthenticateTokenMessage(token);
-                        Connection.Send(message);
-                    }
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     Connection = null;
                 }
@@ -84,6 +82,7 @@ namespace Client.Forms
             if (IsConnected)
             {
                 statusLabel.Text = "Logining...";
+                Username = login;
                 IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
                 Connection.Send(message);
             }
@@ -93,6 +92,7 @@ namespace Client.Forms
         {
             if (IsConnected)
             {
+                statusLabel.Text = "Registarion...";
                 IMessage message = MessageFactory.MakeRegistrationMessage(login, password, email);
                 Connection.Send(message);
             }
@@ -127,18 +127,39 @@ namespace Client.Forms
         // Диалог входа в акаунт
         private void OnAccountDialog(object sender, EventArgs e)
         {
-            using (AccountForm accountDialog = new AccountForm())
+            if (!IsConnected)
             {
-                switch (accountDialog.ShowDialog())
+                MessageBoxDialog("No connection to the server!");
+            }
+            else if (Token != "")
+            {
+                using (AccountForm accountDialog = new AccountForm(Username))
                 {
-                    case DialogResult.OK:
-                        // Пытаемся залогинить пользователя
-                        Login(accountDialog.Login, accountDialog.Password);
-                        break;
-                    case DialogResult.Abort:
-                        // Значит нажата кнопка Register, открываем диалог регистрации
-                        OnRegisterDialog(sender, e);
-                        break;
+                    switch (accountDialog.ShowDialog())
+                    {
+                        case DialogResult.No:
+                            // Значит нажата кнопка Logout, забываем Token
+                            Token = "";
+                            Config.SetValue("Token", Token);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                using (LoginForm loginDialog = new LoginForm())
+                {
+                    switch (loginDialog.ShowDialog())
+                    {
+                        case DialogResult.OK:
+                            // Пытаемся залогинить пользователя
+                            Login(loginDialog.Login, loginDialog.Password);
+                            break;
+                        case DialogResult.Abort:
+                            // Значит нажата кнопка Register, открываем диалог регистрации
+                            OnRegisterDialog(sender, e);
+                            break;
+                    }
                 }
             }
         }
@@ -170,11 +191,11 @@ namespace Client.Forms
         }
 
         // Уведомление
-        private void MessageBoxDialog(string message, MessageBoxIcon icon = MessageBoxIcon.Information, string caption = "")
+        private void MessageBoxDialog(string message, MessageBoxIcon icon = MessageBoxIcon.Error, string caption = "")
         {
             MessageBox.Show(message, caption,
                             MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+                            icon);
         }
         #endregion
 
@@ -267,15 +288,10 @@ namespace Client.Forms
             switch (message.Type)
             {
                 case MessageTypes.Status:
-                    string status = (message as StatusMessage).Text;
-                    OnIncomingStatusMessage(status);
+                    OnStatusMessage(message as StatusMessage);
                     break;
-                case MessageTypes.AuthenticateToken:
-                    string token = (message as AuthenticateTokenMessage).Token;
-                    // Сохраняем токен в конфиг
-                    Config.SetValue("Token", token);
-                    // Уведомляем пользователя об успешном входе
-                    MessageBoxDialog("Login success!");
+                case MessageTypes.AuthenticateResponse:
+                    OnAuthenticateMessage(message as AuthenticationResponseMessage);
                     break;
             }
         }
@@ -287,14 +303,39 @@ namespace Client.Forms
             statusLabel.Text = "Disconnected";
         }
 
-        // Анализ информационных сообщений - отчетов с сервера
-        private void OnIncomingStatusMessage(string status)
+        // Обработка информационных сообщений
+        private void OnStatusMessage(StatusMessage message)
         {
-            switch (status)
+            if (message.Status == Status.Ok)
             {
-                /*case 
-                statusLabel.Text = status;*/
+                // Уведомляем об успешном выполнении
+                MessageBoxDialog(message.Text, MessageBoxIcon.Information);
+            }
+            else
+            {
+                // Уведомляем об ошибке
+                MessageBoxDialog(message.Text);
+            }
+            statusLabel.Text = "Online";
         }
+
+        private void OnAuthenticateMessage(AuthenticationResponseMessage message)
+        {
+            if (message.Status == Status.Ok)
+            {
+                Token = message.Token;
+                // Сохраняем токен в конфиг
+                Config.SetValue("Token", Token);
+                Config.SetValue("Username", Username);
+                // Уведомляем об успешном входе
+                MessageBoxDialog("Login success!", MessageBoxIcon.Information);
+            }
+            else
+            {
+                // Уведомляем об ошибке
+                MessageBoxDialog(message.Message);
+            }
+            statusLabel.Text = "Online";
         }
         #endregion
     }

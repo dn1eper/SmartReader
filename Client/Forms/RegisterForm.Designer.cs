@@ -1,4 +1,4 @@
-﻿namespace Client.Forms
+﻿namespace SmartReader.Client.Forms
 {
     partial class RegisterForm
     {
@@ -49,11 +49,11 @@
             // label
             // 
             label.AutoSize = true;
-            label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            label.Location = new System.Drawing.Point(6, 13);
+            label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            label.Location = new System.Drawing.Point(6, 19);
             label.Name = "label";
             label.Padding = new System.Windows.Forms.Padding(3);
-            label.Size = new System.Drawing.Size(67, 30);
+            label.Size = new System.Drawing.Size(54, 24);
             label.TabIndex = 3;
             label.Text = "Name";
             label.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -61,11 +61,11 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            label1.Location = new System.Drawing.Point(6, 57);
+            label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            label1.Location = new System.Drawing.Point(6, 63);
             label1.Name = "label1";
             label1.Padding = new System.Windows.Forms.Padding(3);
-            label1.Size = new System.Drawing.Size(63, 30);
+            label1.Size = new System.Drawing.Size(51, 24);
             label1.TabIndex = 5;
             label1.Text = "Email";
             label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -74,7 +74,7 @@
             // 
             cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cancelButton.Location = new System.Drawing.Point(217, 13);
+            cancelButton.Location = new System.Drawing.Point(207, 13);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new System.Drawing.Size(75, 23);
             cancelButton.TabIndex = 5;
@@ -84,11 +84,11 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            label2.Location = new System.Drawing.Point(6, 102);
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            label2.Location = new System.Drawing.Point(6, 108);
             label2.Name = "label2";
             label2.Padding = new System.Windows.Forms.Padding(3);
-            label2.Size = new System.Drawing.Size(98, 30);
+            label2.Size = new System.Drawing.Size(81, 24);
             label2.TabIndex = 7;
             label2.Text = "Password";
             label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -104,7 +104,7 @@
             this.loginGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.loginGroupBox.Location = new System.Drawing.Point(0, 0);
             this.loginGroupBox.Name = "loginGroupBox";
-            this.loginGroupBox.Size = new System.Drawing.Size(298, 143);
+            this.loginGroupBox.Size = new System.Drawing.Size(288, 143);
             this.loginGroupBox.TabIndex = 8;
             this.loginGroupBox.TabStop = false;
             // 
@@ -143,7 +143,7 @@
             this.groupButtonsBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupButtonsBox.Location = new System.Drawing.Point(0, 143);
             this.groupButtonsBox.Name = "groupButtonsBox";
-            this.groupButtonsBox.Size = new System.Drawing.Size(298, 42);
+            this.groupButtonsBox.Size = new System.Drawing.Size(288, 42);
             this.groupButtonsBox.TabIndex = 7;
             this.groupButtonsBox.TabStop = false;
             // 
@@ -152,7 +152,7 @@
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.okButton.Enabled = false;
-            this.okButton.Location = new System.Drawing.Point(136, 13);
+            this.okButton.Location = new System.Drawing.Point(126, 13);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 4;
@@ -165,7 +165,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
-            this.ClientSize = new System.Drawing.Size(298, 185);
+            this.ClientSize = new System.Drawing.Size(288, 185);
             this.Controls.Add(this.loginGroupBox);
             this.Controls.Add(this.groupButtonsBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

@@ -1,24 +1,13 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Text;
+﻿using System.Windows.Forms;
 
-namespace Client.Forms
+namespace SmartReader.Client.Forms
 {
     public partial class AccountForm : Form
     {
-        private bool CanAccept => !nameTextBox.Text.IsEmpty() && !passwordTextBox.Text.IsEmpty();
-
-        public string Login => nameTextBox.Text;
-        public string Password => passwordTextBox.Text;
-
-        public AccountForm()
+        public AccountForm(string username)
         {
             InitializeComponent();
-        }
-
-        private void OnChanged(object sender, EventArgs e)
-        {
-            okButton.Enabled = CanAccept;
+            label.Text += username;
         }
     }
 }

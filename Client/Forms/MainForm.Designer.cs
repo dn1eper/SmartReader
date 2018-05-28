@@ -1,4 +1,4 @@
-﻿namespace Client.Forms
+﻿namespace SmartReader.Client.Forms
 {
     partial class MainForm
     {

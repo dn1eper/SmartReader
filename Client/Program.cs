@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Client.Forms;
+using SmartReader.Client.Forms;
 
 namespace SmartReader.Client
 {
