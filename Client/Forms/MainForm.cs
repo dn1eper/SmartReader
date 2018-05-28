@@ -83,6 +83,7 @@ namespace Client.Forms
         {
             if (IsConnected)
             {
+                statusLabel.Text = "Logining...";
                 IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
                 Connection.Send(message);
             }
@@ -153,7 +154,7 @@ namespace Client.Forms
                 }
             }
         }
-        
+
         // Диалог открытия txt файла книжки
         private void OnFileOpen(object sender, EventArgs e)
         {
@@ -166,6 +167,14 @@ namespace Client.Forms
                 BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName);
                 OpenBook(bookRecord);
             }
+        }
+
+        // Уведомление
+        private void MessageBoxDialog(string message, MessageBoxIcon icon = MessageBoxIcon.Information, string caption = "")
+        {
+            MessageBox.Show(message, caption,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
         }
         #endregion
 
@@ -257,13 +266,16 @@ namespace Client.Forms
             IMessage message = e.Message as IMessage;
             switch (message.Type)
             {
-                // TODO: обработка сообщений
                 case MessageTypes.Status:
                     string status = (message as StatusMessage).Text;
-                    statusLabel.Text = status;
+                    OnIncomingStatusMessage(status);
                     break;
                 case MessageTypes.AuthenticateToken:
-                    // Принимаем token
+                    string token = (message as AuthenticateTokenMessage).Token;
+                    // Сохраняем токен в конфиг
+                    Config.SetValue("Token", token);
+                    // Уведомляем пользователя об успешном входе
+                    MessageBoxDialog("Login success!");
                     break;
             }
         }
@@ -273,6 +285,16 @@ namespace Client.Forms
         {
             Connection = null;
             statusLabel.Text = "Disconnected";
+        }
+
+        // Анализ информационных сообщений - отчетов с сервера
+        private void OnIncomingStatusMessage(string status)
+        {
+            switch (status)
+            {
+                /*case 
+                statusLabel.Text = status;*/
+        }
         }
         #endregion
     }
