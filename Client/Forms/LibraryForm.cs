@@ -26,7 +26,7 @@ namespace SmartReader.Client.Forms
         private IConnection Connection;
         private string Token;
         private List<BookRecord> LocalBooks => Storage.Books;
-        private List<BookRecord> RemoteBooks;
+        private List<BookInfo> RemoteBooks;
         private bool IsConnected => Connection != null && !Token.IsEmpty();
 
         public BookRecord SelectedBook
@@ -44,12 +44,13 @@ namespace SmartReader.Client.Forms
         }
         private bool IsLocalSelectedBook => Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[2].Value);
         private bool IsRemoteSelectedBook => Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[3].Value);
+        private bool OnSelectionChangedBlock = false;
 
         public LibraryForm(LibraryStorage storage)
         {
             InitializeComponent();
             Storage = storage;
-            RemoteBooks = new List<BookRecord>();
+            RemoteBooks = new List<BookInfo>();
             dataGridView.SelectionChanged += OnSelectionChanged;
 
             DrawBooksTable();
@@ -61,8 +62,7 @@ namespace SmartReader.Client.Forms
             Token = token;
             if (Token.IsEmpty()) statusLabel.Text = "Not signed";
             else if (Connection != null) statusLabel.Text = "Online";
-            progressBar.Visible = true;
-
+            // Загрузка списка книг с сервера
             LoadBookList();
         }
 
@@ -70,6 +70,7 @@ namespace SmartReader.Client.Forms
         // Рисует таблицу с книгами
         private void DrawBooksTable()
         {
+            OnSelectionChangedBlock = true;
             int index = -1;
             dataGridView.Rows.Clear();
             // Вывод Local Books
@@ -79,7 +80,19 @@ namespace SmartReader.Client.Forms
                     true, false, LocalBooks[LocalBooks.Count-index-1].Path);
             }
             // Вывод Remote Books
-            // TODO: ...
+            foreach (BookInfo book in RemoteBooks)
+            {
+                // Если книжка уже есть в списке, то добавляем ей флай Remote
+                if (false)
+                {
+                    //TODO: ...
+                }
+                // Иначе добавляем новую строчку
+                else {
+                    dataGridView.Rows.Add(index++, book.Title, false, true);
+                }
+            }
+            OnSelectionChangedBlock = false;
         }
 
         // Удалить книжку локально и с сервера (не файл а ссылку)
@@ -98,11 +111,15 @@ namespace SmartReader.Client.Forms
             dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
         }
 
+        // Изменение выбранной строчки в таблице
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            okButton.Enabled = IsLocalSelectedBook;
-            downloadButton.Enabled = IsConnected && !IsLocalSelectedBook && IsRemoteSelectedBook;
-            uploadButton.Enabled = IsConnected && IsLocalSelectedBook && !IsRemoteSelectedBook;
+            if (!OnSelectionChangedBlock)
+            {
+                okButton.Enabled = IsLocalSelectedBook;
+                downloadButton.Enabled = IsConnected && !IsLocalSelectedBook && IsRemoteSelectedBook;
+                uploadButton.Enabled = IsConnected && IsLocalSelectedBook && !IsRemoteSelectedBook;
+            }
         }
 
         // Обновляет статус
@@ -110,6 +127,7 @@ namespace SmartReader.Client.Forms
         {
             if (!IsConnected) statusLabel.Text = "";
             else statusLabel.Text = "Online";
+            progressBar.Visible = false;
         }
         #endregion
 
@@ -122,6 +140,7 @@ namespace SmartReader.Client.Forms
                 IMessage message = MessageFactory.MakeGetBookListMessage(Token);
                 Connection.Send(message);
                 statusLabel.Text = "Loading book list...";
+                progressBar.Visible = true;
             }
         }
 
@@ -131,9 +150,10 @@ namespace SmartReader.Client.Forms
             BookRecord book = SelectedBook;
             using (StreamReader stream = new StreamReader(SelectedBook.Path))
             {
+                string bookText = stream.ReadToEnd();
                 IMessage message = MessageFactory.MakeUploadBookMessage(
                     System.IO.Path.GetFileNameWithoutExtension(book.Path),
-                    stream.ReadToEnd(),
+                    bookText,
                     Token);
                 Connection.Send(message);
             }
@@ -167,8 +187,12 @@ namespace SmartReader.Client.Forms
         // Обработка сообщения со списком книг на сервере
         private void OnBookListMessage(BookListMessage bookList)
         {
-            //RemoteBooks = bookList.BookList;
-            //DrawBooksTable();
+            RemoteBooks = bookList.Books;
+
+            // Задержка для того чтобы успели отрисоваться локальные книги
+            System.Threading.Thread.Sleep(1000);
+
+            DrawBooksTable();
             UpdateStatusLabel();
         }
         #endregion

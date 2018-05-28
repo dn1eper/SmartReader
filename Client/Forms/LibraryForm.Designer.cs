@@ -37,30 +37,19 @@
             this.Local = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Remote = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupButtonsBox = new System.Windows.Forms.GroupBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusLabel = new System.Windows.Forms.ToolStripLabel();
             this.downloadButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
-            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             cancelButton = new System.Windows.Forms.Button();
             deleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupButtonsBox.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // okButton
-            // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(511, 13);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 1;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = true;
             // 
             // cancelButton
             // 
@@ -83,6 +72,17 @@
             deleteButton.Text = "Delete";
             deleteButton.UseVisualStyleBackColor = true;
             deleteButton.Click += new System.EventHandler(this.OnDelete);
+            // 
+            // okButton
+            // 
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.okButton.Location = new System.Drawing.Point(511, 13);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(75, 23);
+            this.okButton.TabIndex = 1;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
             // 
             // dataGridView
             // 
@@ -149,6 +149,13 @@
             this.Path.ReadOnly = true;
             this.Path.Visible = false;
             // 
+            // ID
+            // 
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Visible = false;
+            // 
             // groupButtonsBox
             // 
             this.groupButtonsBox.Controls.Add(deleteButton);
@@ -172,7 +179,7 @@
             this.statusLabel});
             this.toolStrip1.Location = new System.Drawing.Point(7, 13);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(12, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(145, 25);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -180,6 +187,7 @@
             // 
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 22);
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar.Visible = false;
             // 
             // statusLabel
@@ -210,13 +218,6 @@
             this.uploadButton.Text = "Upload";
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.OnUpload);
-            // 
-            // ID
-            // 
-            this.ID.HeaderText = "ID";
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            this.ID.Visible = false;
             // 
             // LibraryForm
             // 
