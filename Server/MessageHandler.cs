@@ -8,6 +8,7 @@ using SmartReader.Message.Implementations;
 using SmartReader.Networking;
 using SmartReader.Database;
 using System.Security.Cryptography;
+using SmartReader.Library.Book;
 
 namespace SmartReader.Server
 {
@@ -49,6 +50,12 @@ namespace SmartReader.Server
         {
             connection.Send(MessageFactory.MakeStatusMessage(Status.Ok, message));
         }
+
+        private static bool IsLoggedIn(string token)
+        {
+            string login = Conn.GetLoginFor(token);
+            return login != null;
+        }
         #endregion
 
         public static void HandleAuthentication(IMessage message, IConnection connection)
@@ -67,10 +74,8 @@ namespace SmartReader.Server
             if (passHash == Hash(authMessage.Password))
             {
                 SendToken(authMessage.Login, connection);
-            } else
-            {
-                connection.Send(MessageFactory.MakeAuthenticationResposeMessage("", Status.Error, "Пароли не совпадают."));
-            }
+            } 
+            connection.Send(MessageFactory.MakeAuthenticationResposeMessage("", Status.Error, "Пароли не совпадают."));
         }
 
         public static void HandleRegistration(IMessage message, IConnection connection)
@@ -129,7 +134,6 @@ namespace SmartReader.Server
             // Upload the book
             try
             {
-                // TODO реализовать
                 Conn.InsertBookFor(login, bookMessage.Title, bookMessage.Content);
                 SendStatusOk(connection, "Книга загружена.");
             }
@@ -141,8 +145,44 @@ namespace SmartReader.Server
 
         public static void HandleGetBookList(IMessage message, IConnection connection)
         {
-            // TODO: send BookListMessage
-            SendStatusError(connection, "Не реализовано!");
+            GetBookListMessage bookMessage = message as GetBookListMessage;
+            string login = Conn.GetLoginFor(bookMessage.Token);
+            if (login == null)
+            {
+                SendStatusError(connection, "Вы не авторизовались.");
+                return;
+            }
+
+            // Send book list
+            try
+            {
+                List<BookInfo> bookList = Conn.GetBookListFor(login);
+                connection.Send(MessageFactory.MakeBookListMessage(bookList));
+            }
+            catch (Exception e)
+            {
+                SendStatusError(connection, e.Message);
+            }
+        }
+
+        public static void HandleGetBook(IMessage message, IConnection connection)
+        {
+            GetBookMessage bookMessage = message as GetBookMessage;
+            if (!IsLoggedIn(bookMessage.Token))
+            {
+                SendStatusError(connection, "Вы не авторизовались.");
+                return;
+            }
+            int bookId = bookMessage.BookId;
+            try
+            {
+                string content = Conn.GetBookContent(bookId);
+                connection.Send(MessageFactory.MakeBookMessage(bookId, content));
+            }
+            catch (Exception e)
+            {
+                SendStatusError(connection, e.Message);
+            }
         }
     }
 }

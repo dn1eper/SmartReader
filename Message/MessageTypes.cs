@@ -19,13 +19,15 @@ namespace SmartReader.Message
         Authenticate,
         AuthenticateResponse,
         Registration,
+        Status,
         UploadBook,
         GetBookList,
         BookList,
         GetBook,
+        Book,
+        // Мы тут
         DeleteBook,
         AddBookmark,
         DeleteBookmark,
-        Status
     }
 }

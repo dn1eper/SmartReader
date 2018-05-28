@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Book\Book.cs" />
+    <Compile Include="Book\BookInfo.cs" />
     <Compile Include="Book\BookReader.cs" />
     <Compile Include="Book\BookRecord.cs" />
     <Compile Include="Storage\ConfigStorage.cs" />
