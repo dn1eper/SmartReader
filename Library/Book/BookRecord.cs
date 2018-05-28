@@ -12,7 +12,7 @@ namespace SmartReader.Library.Book
 
         public override int GetHashCode()
         {
-            return Path.GetHashCode();
+            return System.IO.Path.GetFileNameWithoutExtension(Path).GetHashCode();
         }
         public override bool Equals(object obj)
         {

@@ -138,5 +138,11 @@ namespace SmartReader.Server
                 SendStatusError(connection, e.Message);
             }
         }
+
+        public static void HandleGetBookList(IMessage message, IConnection connection)
+        {
+            // TODO: send BookListMessage
+            SendStatusError(connection, "Не реализовано!");
+        }
     }
 }

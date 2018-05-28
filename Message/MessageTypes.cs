@@ -17,11 +17,11 @@ namespace SmartReader.Message
     public enum MessageTypes
     {
         Authenticate,
-        AuthenticateToken,
         AuthenticateResponse,
         Registration,
         UploadBook,
         GetBookList,
+        BookList,
         GetBook,
         DeleteBook,
         AddBookmark,

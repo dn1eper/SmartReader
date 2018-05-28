@@ -66,6 +66,9 @@ namespace ServerTest
                 case MessageTypes.UploadBook:
                     SmartReader.Server.Program.HandleUploadBook(message, sender as IConnection);
                     break;
+                case MessageTypes.GetBookList:
+                    SmartReader.Server.Program.HandleGetBookList(message, sender as IConnection);
+                    break;
             }
         }
     }

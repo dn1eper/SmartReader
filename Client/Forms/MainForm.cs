@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using SmartReader.Library.Storage;
@@ -112,16 +113,18 @@ namespace SmartReader.Client.Forms
         // Диалог библиотеки (список всех книг)
         private void OnLibraryDialog(object sender, EventArgs e)
         {
-            using (LibraryForm libraryDialog = new LibraryForm(Storage.Books))
+            LibraryForm libraryDialog;
+            if (Connection == null) libraryDialog = new LibraryForm(Storage.Books);
+            else libraryDialog = new LibraryForm(Storage.Books, Connection, Token);  
+            
+            if (libraryDialog.ShowDialog() == DialogResult.OK)
             {
-                if (libraryDialog.ShowDialog() == DialogResult.OK)
-                {
-                    // Закрываем открытую книгу если нужно
-                    if (IsBookOpend) book.Close();
-                    // Открываем выбранную книгу
-                    OpenBook(libraryDialog.SelectedBook);
-                }
+                // Закрываем открытую книгу если нужно
+                if (IsBookOpend) book.Close();
+                // Открываем выбранную книгу
+                OpenBook(libraryDialog.SelectedBook);
             }
+            libraryDialog.Dispose();
         }
 
         // Диалог входа в акаунт
@@ -131,7 +134,7 @@ namespace SmartReader.Client.Forms
             {
                 MessageBoxDialog("No connection to the server!");
             }
-            else if (Token != "")
+            else if (!Token.IsEmpty())
             {
                 using (AccountForm accountDialog = new AccountForm(Username))
                 {

@@ -18,11 +18,6 @@ namespace SmartReader.Message
             return new StatusMessage() { Status = status, Text = text };
         }
 
-        public static IMessage MakeAuthenticateTokenMessage(string token)
-        {
-            return new AuthenticateTokenMessage(){Token = token};
-        }
-
         public static IMessage MakeRegistrationMessage(string login, string password, string email)
         {
             return new RegistrationMessage() { Login = login, Password = password };
@@ -35,6 +30,10 @@ namespace SmartReader.Message
         public static IMessage MakeUploadBookMessage(string title, string text, string token)
         {
             return new UploadBookMessage() { Title = title, Content = text, Token = token };
+        }
+        public static IMessage MakeGetBookListMessage(string token)
+        {
+            return new GetBookListMessage() { Token = token };
         }
     }
 }
