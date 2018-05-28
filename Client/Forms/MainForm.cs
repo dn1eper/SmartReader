@@ -13,9 +13,6 @@ namespace SmartReader.Client.Forms
 {
     public partial class MainForm : Form
     {
-        // TODO: вывод в statusLabel номера страницы
-        // TODO: OnIncomingMessage
-
         private Book book;
         private LibraryStorage Storage;
         private ConfigStorage Config;
@@ -26,7 +23,6 @@ namespace SmartReader.Client.Forms
         private string Token;
         private string Username;
 
-
         public MainForm()
         {
             InitializeComponent();
@@ -35,7 +31,7 @@ namespace SmartReader.Client.Forms
             // Инициализируем локальное хранилище
             Storage = new LibraryStorage();
             Config = new ConfigStorage();
-            // Загружаем сохраненный токен
+            // Загружаем сохраненную информацию о пользователе
             Token = Config.GetValue("Token");
             Username = Config.GetValue("Username");
             // Открываем последнюю книгу
@@ -46,59 +42,6 @@ namespace SmartReader.Client.Forms
             // Пытаемся подключится к серверу
             ConnectServer();
         }
-
-        private void OpenBook(BookRecord bookRecord)
-        {
-            book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
-            book.BookOpend += OnBookOpend;
-            book.BookClosed += OnBookClosed;
-            book.Open();
-            Storage.AddBook(bookRecord);
-        }
-
-        private void ConnectServer()
-        {
-            if (!IsConnected)
-            {
-                try
-                {
-                    // Создаем подключение к серверу
-                    Connection = NetworkingFactory.OpenConnection("localhost", 8080);
-                    Connection.Open();
-                    statusLabel.Text = "Online";
-                    // Вешаем обработчики
-                    Connection.MessageReceived += OnIncomingMessage;
-                    Connection.Closed += OnConnectionClosed;
-                }
-                catch (SocketException)
-                {
-                    Connection = null;
-                }
-
-            }
-        }
-
-        private void Login(string login, string password)
-        {
-            if (IsConnected)
-            {
-                statusLabel.Text = "Logining...";
-                Username = login;
-                IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
-                Connection.Send(message);
-            }
-        }
-
-        private void Register(string login, string password, string email)
-        {
-            if (IsConnected)
-            {
-                statusLabel.Text = "Registarion...";
-                IMessage message = MessageFactory.MakeRegistrationMessage(login, password, email);
-                Connection.Send(message);
-            }
-        }
-
 
         #region Диалоги
         // Диалог о программе
@@ -114,8 +57,8 @@ namespace SmartReader.Client.Forms
         private void OnLibraryDialog(object sender, EventArgs e)
         {
             LibraryForm libraryDialog;
-            if (Connection == null) libraryDialog = new LibraryForm(Storage.Books);
-            else libraryDialog = new LibraryForm(Storage.Books, Connection, Token);  
+            if (Connection == null) libraryDialog = new LibraryForm(Storage);
+            else libraryDialog = new LibraryForm(Storage, Connection, Token);  
             
             if (libraryDialog.ShowDialog() == DialogResult.OK)
             {
@@ -144,6 +87,7 @@ namespace SmartReader.Client.Forms
                             // Значит нажата кнопка Logout, забываем Token
                             Token = "";
                             Config.SetValue("Token", Token);
+                            UpdateStatusLabel();
                             break;
                     }
                 }
@@ -203,6 +147,16 @@ namespace SmartReader.Client.Forms
         #endregion
 
         #region Оконные события
+        // Открывает книжку
+        private void OpenBook(BookRecord bookRecord)
+        {
+            book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
+            book.BookOpend += OnBookOpend;
+            book.BookClosed += OnBookClosed;
+            book.Open();
+            Storage.AddBook(bookRecord);
+        }
+
         // Выход из приложения
         private void OnExit(object sender, EventArgs e)
         {
@@ -281,10 +235,65 @@ namespace SmartReader.Client.Forms
             }
             IsFullScreen = !IsFullScreen;
         }
+
+        // Обновляет статус
+        private void UpdateStatusLabel()
+        {
+            if (!IsConnected) statusLabel.Text = "Offline";
+            else if (Token.IsEmpty()) statusLabel.Text = "Online (not signed)";
+            else statusLabel.Text = "Online";
+        }
         #endregion
 
         #region Сетевые события
-        // Обработка входящих сообщений от сервера
+        // Подключается к серверу
+        private void ConnectServer()
+        {
+            if (!IsConnected)
+            {
+                try
+                {
+                    // Создаем подключение к серверу
+                    Connection = NetworkingFactory.OpenConnection("localhost", 8080);
+                    Connection.Open();
+                    // Обновляем статус
+                    UpdateStatusLabel();
+                    // Вешаем обработчики
+                    Connection.MessageReceived += OnIncomingMessage;
+                    Connection.Closed += OnConnectionClosed;
+                }
+                catch (SocketException)
+                {
+                    Connection = null;
+                }
+
+            }
+        }
+
+        // Аутентификация
+        private void Login(string login, string password)
+        {
+            if (IsConnected)
+            {
+                statusLabel.Text = "Logining...";
+                Username = login;
+                IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
+                Connection.Send(message);
+            }
+        }
+
+        // Регистрация
+        private void Register(string login, string password, string email)
+        {
+            if (IsConnected)
+            {
+                statusLabel.Text = "Registarion...";
+                IMessage message = MessageFactory.MakeRegistrationMessage(login, password, email);
+                Connection.Send(message);
+            }
+        }
+
+        // Обработка входящих сообщений от сервера (вызов нужного обработчика)
         private void OnIncomingMessage(object sender, MessageEventArgs e)
         {
             IMessage message = e.Message as IMessage;
@@ -303,7 +312,7 @@ namespace SmartReader.Client.Forms
         private void OnConnectionClosed(object sender, EventArgs e)
         {
             Connection = null;
-            statusLabel.Text = "Disconnected";
+            UpdateStatusLabel();
         }
 
         // Обработка информационных сообщений
@@ -319,9 +328,10 @@ namespace SmartReader.Client.Forms
                 // Уведомляем об ошибке
                 MessageBoxDialog(message.Text);
             }
-            statusLabel.Text = "Online";
+            UpdateStatusLabel();
         }
 
+        // Обработка сообщений аутентификации
         private void OnAuthenticateMessage(AuthenticationResponseMessage message)
         {
             if (message.Status == Status.Ok)
@@ -338,7 +348,7 @@ namespace SmartReader.Client.Forms
                 // Уведомляем об ошибке
                 MessageBoxDialog(message.Message);
             }
-            statusLabel.Text = "Online";
+            UpdateStatusLabel();
         }
         #endregion
     }

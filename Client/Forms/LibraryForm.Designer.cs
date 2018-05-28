@@ -30,21 +30,23 @@
         {
             System.Windows.Forms.Button okButton;
             System.Windows.Forms.Button cancelButton;
+            System.Windows.Forms.Button deleteButton;
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.groupButtonsBox = new System.Windows.Forms.GroupBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.statusLabel = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Local = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Remote = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button1 = new System.Windows.Forms.Button();
+            this.groupButtonsBox = new System.Windows.Forms.GroupBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.statusLabel = new System.Windows.Forms.ToolStripLabel();
+            this.downloadButton = new System.Windows.Forms.Button();
+            this.uploadButton = new System.Windows.Forms.Button();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             okButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
+            deleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupButtonsBox.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -54,7 +56,7 @@
             // 
             okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            okButton.Location = new System.Drawing.Point(554, 13);
+            okButton.Location = new System.Drawing.Point(511, 13);
             okButton.Name = "okButton";
             okButton.Size = new System.Drawing.Size(75, 23);
             okButton.TabIndex = 1;
@@ -65,12 +67,23 @@
             // 
             cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cancelButton.Location = new System.Drawing.Point(635, 13);
+            cancelButton.Location = new System.Drawing.Point(592, 13);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new System.Drawing.Size(75, 23);
             cancelButton.TabIndex = 0;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
+            // 
+            // deleteButton
+            // 
+            deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            deleteButton.Location = new System.Drawing.Point(268, 13);
+            deleteButton.Name = "deleteButton";
+            deleteButton.Size = new System.Drawing.Size(75, 23);
+            deleteButton.TabIndex = 5;
+            deleteButton.Text = "Delete";
+            deleteButton.UseVisualStyleBackColor = true;
+            deleteButton.Click += new System.EventHandler(this.OnDelete);
             // 
             // dataGridView
             // 
@@ -85,7 +98,8 @@
             this.name,
             this.Local,
             this.Remote,
-            this.Path});
+            this.Path,
+            this.ID});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
@@ -95,68 +109,8 @@
             this.dataGridView.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(716, 441);
+            this.dataGridView.Size = new System.Drawing.Size(673, 441);
             this.dataGridView.TabIndex = 0;
-            // 
-            // groupButtonsBox
-            // 
-            this.groupButtonsBox.Controls.Add(this.button1);
-            this.groupButtonsBox.Controls.Add(this.toolStrip1);
-            this.groupButtonsBox.Controls.Add(this.button4);
-            this.groupButtonsBox.Controls.Add(this.button3);
-            this.groupButtonsBox.Controls.Add(okButton);
-            this.groupButtonsBox.Controls.Add(cancelButton);
-            this.groupButtonsBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupButtonsBox.Location = new System.Drawing.Point(0, 399);
-            this.groupButtonsBox.Name = "groupButtonsBox";
-            this.groupButtonsBox.Size = new System.Drawing.Size(716, 42);
-            this.groupButtonsBox.TabIndex = 1;
-            this.groupButtonsBox.TabStop = false;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel,
-            this.toolStripProgressBar1});
-            this.toolStrip1.Location = new System.Drawing.Point(7, 13);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(157, 25);
-            this.toolStrip1.TabIndex = 4;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // statusLabel
-            // 
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(43, 22);
-            this.statusLabel.Text = "Offline";
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
-            // 
-            // button4
-            // 
-            this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Location = new System.Drawing.Point(392, 13);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "Download";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.OnDownload);
-            // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(473, 13);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Upload";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.OnUpload);
             // 
             // num
             // 
@@ -196,16 +150,74 @@
             this.Path.ReadOnly = true;
             this.Path.Visible = false;
             // 
-            // button1
+            // groupButtonsBox
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(311, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.OnDelete);
+            this.groupButtonsBox.Controls.Add(deleteButton);
+            this.groupButtonsBox.Controls.Add(this.toolStrip1);
+            this.groupButtonsBox.Controls.Add(this.downloadButton);
+            this.groupButtonsBox.Controls.Add(this.uploadButton);
+            this.groupButtonsBox.Controls.Add(okButton);
+            this.groupButtonsBox.Controls.Add(cancelButton);
+            this.groupButtonsBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupButtonsBox.Location = new System.Drawing.Point(0, 399);
+            this.groupButtonsBox.Name = "groupButtonsBox";
+            this.groupButtonsBox.Size = new System.Drawing.Size(673, 42);
+            this.groupButtonsBox.TabIndex = 1;
+            this.groupButtonsBox.TabStop = false;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.progressBar,
+            this.statusLabel});
+            this.toolStrip1.Location = new System.Drawing.Point(7, 13);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(12, 25);
+            this.toolStrip1.TabIndex = 4;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // progressBar
+            // 
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(100, 22);
+            this.progressBar.Visible = false;
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(0, 22);
+            // 
+            // downloadButton
+            // 
+            this.downloadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadButton.Enabled = false;
+            this.downloadButton.Location = new System.Drawing.Point(349, 13);
+            this.downloadButton.Name = "downloadButton";
+            this.downloadButton.Size = new System.Drawing.Size(75, 23);
+            this.downloadButton.TabIndex = 3;
+            this.downloadButton.Text = "Download";
+            this.downloadButton.UseVisualStyleBackColor = true;
+            this.downloadButton.Click += new System.EventHandler(this.OnDownload);
+            // 
+            // uploadButton
+            // 
+            this.uploadButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.uploadButton.Enabled = false;
+            this.uploadButton.Location = new System.Drawing.Point(430, 13);
+            this.uploadButton.Name = "uploadButton";
+            this.uploadButton.Size = new System.Drawing.Size(75, 23);
+            this.uploadButton.TabIndex = 2;
+            this.uploadButton.Text = "Upload";
+            this.uploadButton.UseVisualStyleBackColor = true;
+            this.uploadButton.Click += new System.EventHandler(this.OnUpload);
+            // 
+            // ID
+            // 
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.Visible = false;
             // 
             // LibraryForm
             // 
@@ -213,7 +225,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
-            this.ClientSize = new System.Drawing.Size(716, 441);
+            this.ClientSize = new System.Drawing.Size(673, 441);
             this.Controls.Add(this.groupButtonsBox);
             this.Controls.Add(this.dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -235,16 +247,16 @@
 
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.GroupBox groupButtonsBox;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button downloadButton;
+        private System.Windows.Forms.Button uploadButton;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel statusLabel;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.DataGridViewTextBoxColumn num;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Local;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Remote;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
     }
 }

@@ -5,12 +5,17 @@ using System.Windows.Forms;
 using SmartReader.Library.Book;
 using SmartReader.Networking;
 using SmartReader.Message;
+using SmartReader.Networking.Events;
+using SmartReader.Message.Implementations;
+using SmartReader.Library.Storage;
 
 namespace SmartReader.Client.Forms
 {
     public partial class LibraryForm : Form
     {
-        private List<BookRecord> Books;
+        private LibraryStorage Storage;
+        private List<BookRecord> LocalBooks => Storage.Books;
+        private List<BookRecord> RemoteBooks;
         private IConnection Connection;
         private string Token;
         private bool IsConnected => Connection != null && !Token.IsEmpty();
@@ -18,49 +23,71 @@ namespace SmartReader.Client.Forms
         {
             get
             {
-                string path = dataGridView.SelectedRows[0].Cells[2].Value as string;
-                int index = Books.IndexOf(new BookRecord() { Path = path, Offset = 0 });
-                return Books[index];
+                string path = dataGridView.SelectedRows[0].Cells[4].Value as string;
+                int index = LocalBooks.IndexOf(new BookRecord() { Path = path, Offset = 0 });
+                return LocalBooks[index];
             }
         }
 
-        public LibraryForm(List<BookRecord> books)
+        public LibraryForm(LibraryStorage storage)
         {
             InitializeComponent();
-            Books = books;
-            Books.Reverse();
+            Storage = storage;
 
             DrawBooksTable();
         }
-        public LibraryForm(List<BookRecord> books, IConnection connection, string token) : this(books)
+        public LibraryForm(LibraryStorage storage, IConnection connection, string token) : this(storage)
         {
             Connection = connection;
+            Connection.MessageReceived += OnIncomingMessage;
             Token = token;
             if (Token.IsEmpty()) statusLabel.Text = "Not signed";
             else if (Connection != null) statusLabel.Text = "Online";
-            
+            progressBar.Visible = true;
+
             LoadBookList();
         }
 
-
+        #region Оконные события
         // Рисует таблицу с книгами
-        private void DrawBooksTable()
+        private void DrawBooksTable(bool local = true, bool global = false)
         {
             int index = 0;
-            foreach (BookRecord book in Books)
+            dataGridView.Rows.Clear();
+            foreach (BookRecord book in LocalBooks)
             {
-                dataGridView.Rows.Add(++index, System.IO.Path.GetFileNameWithoutExtension(book.Path), true, false, book.Path);
+                dataGridView.Rows.Add(++index, System.IO.Path.GetFileNameWithoutExtension(book.Path), local, global, book.Path);
             }
         }
 
-        // Загружает список книг на сервере
+        // Удалить книжку локально и с сервера (не файл а ссылку)
+        private void OnDelete(object sender, EventArgs e)
+        {
+            BookRecord book = SelectedBook;
+            dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
+            Storage.DeleteBook(book);
+
+            //if (SelectedBook.ID)
+            //DeleteBook(SelectedBook.ID);
+        }
+
+        // Обновляет статус
+        private void UpdateStatusLabel()
+        {
+            if (!IsConnected) statusLabel.Text = "";
+            else statusLabel.Text = "Online";
+        }
+        #endregion
+
+        #region Сетевые события
+        // Запрашивает список книг с сервера
         private void LoadBookList()
         {
             if (IsConnected)
-            {
-                statusLabel.Text = "Loading book list...";
+            {                
                 IMessage message = MessageFactory.MakeGetBookListMessage(Token);
                 Connection.Send(message);
+                statusLabel.Text = "Loading book list...";
             }
         }
 
@@ -76,10 +103,32 @@ namespace SmartReader.Client.Forms
 
         }
 
-        // Удалить книжку из сервера и локально (не файл а ссылку)
-        private void OnDelete(object sender, EventArgs e)
+        // Удаление книги с сервера
+        private void DeleteBook(int id)
         {
 
         }
+
+
+        // Обработка входящих сообщений от сервера (вызов нужного обработчика)
+        private void OnIncomingMessage(object sender, MessageEventArgs e)
+        {
+            IMessage message = e.Message as IMessage;
+            switch (message.Type)
+            {
+                case MessageTypes.BookList:
+                    OnBookListMessage(message as BookListMessage);
+                    break;
+            }
+        }
+
+        // Обработка сообщения со списком книг на сервере
+        private void OnBookListMessage(BookListMessage bookList)
+        {
+            //RemoteBooks = bookList.BookList;
+            //DrawBooksTable();
+            UpdateStatusLabel();
+        }
+        #endregion
     }
 }

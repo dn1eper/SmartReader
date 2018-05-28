@@ -44,6 +44,16 @@ namespace SmartReader.Library.Storage
             }
         }
 
+        public bool DeleteBook(BookRecord book)
+        {
+            if (Books.Contains(book))
+            {
+                Books.Remove(book);
+                return true;
+            }
+            return false;
+        }
+
         public BookRecord GetRecord(string path)
         {
             BookRecord bookRecord = new BookRecord()
