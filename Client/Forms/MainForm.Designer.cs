@@ -32,7 +32,6 @@
             System.Windows.Forms.ToolStripMenuItem openMenuItem;
             System.Windows.Forms.ToolStripMenuItem eixitMenuItem;
             System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
-            System.Windows.Forms.ToolStripMenuItem settingsMenuItem;
             System.Windows.Forms.ToolStripMenuItem libraryMenuItem;
             System.Windows.Forms.ToolStripMenuItem accountMenuItem;
             this.bookmarksMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +56,6 @@
             openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             eixitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             libraryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             accountMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
@@ -87,12 +85,6 @@
             aboutMenuItem.Size = new System.Drawing.Size(107, 22);
             aboutMenuItem.Text = "&About";
             aboutMenuItem.Click += new System.EventHandler(this.OnAboutDialog);
-            // 
-            // settingsMenuItem
-            // 
-            settingsMenuItem.Name = "settingsMenuItem";
-            settingsMenuItem.Size = new System.Drawing.Size(180, 22);
-            settingsMenuItem.Text = "&Settings";
             // 
             // libraryMenuItem
             // 
@@ -143,7 +135,6 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             openMenuItem,
             accountMenuItem,
-            settingsMenuItem,
             eixitMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -180,6 +171,7 @@
             this.nextPageMenuItem,
             this.previousPageMenuItem});
             this.bookContextMenu.Name = "bookContextMenu";
+            this.bookContextMenu.OwnerItem = this.navigationToolStripMenuItem;
             this.bookContextMenu.Size = new System.Drawing.Size(149, 48);
             // 
             // nextPageMenuItem

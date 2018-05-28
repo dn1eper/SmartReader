@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Button okButton;
             System.Windows.Forms.Button cancelButton;
             System.Windows.Forms.Button deleteButton;
+            this.okButton = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,7 +44,6 @@
             this.downloadButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            okButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
             deleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -54,14 +53,14 @@
             // 
             // okButton
             // 
-            okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            okButton.Location = new System.Drawing.Point(511, 13);
-            okButton.Name = "okButton";
-            okButton.Size = new System.Drawing.Size(75, 23);
-            okButton.TabIndex = 1;
-            okButton.Text = "OK";
-            okButton.UseVisualStyleBackColor = true;
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.okButton.Location = new System.Drawing.Point(511, 13);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(75, 23);
+            this.okButton.TabIndex = 1;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
             // 
             // cancelButton
             // 
@@ -156,7 +155,7 @@
             this.groupButtonsBox.Controls.Add(this.toolStrip1);
             this.groupButtonsBox.Controls.Add(this.downloadButton);
             this.groupButtonsBox.Controls.Add(this.uploadButton);
-            this.groupButtonsBox.Controls.Add(okButton);
+            this.groupButtonsBox.Controls.Add(this.okButton);
             this.groupButtonsBox.Controls.Add(cancelButton);
             this.groupButtonsBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupButtonsBox.Location = new System.Drawing.Point(0, 399);
@@ -221,7 +220,7 @@
             // 
             // LibraryForm
             // 
-            this.AcceptButton = okButton;
+            this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
@@ -258,5 +257,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Remote;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.Button okButton;
     }
 }
