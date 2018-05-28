@@ -184,5 +184,40 @@ namespace SmartReader.Server
                 SendStatusError(connection, e.Message);
             }
         }
+
+        public static void HandleDeleteBook(IMessage message, IConnection connection)
+        {
+            DeleteBookMessage bookMessage = message as DeleteBookMessage;
+            string login = Conn.GetLoginFor(bookMessage.Token);
+            if (login == null)
+            {
+                SendStatusError(connection, "Вы не авторизованы.");
+                return;
+            }
+            try
+            {
+                if (!Conn.HasBook(login, bookMessage.BookId))
+                {
+                    SendStatusError(connection, "Эта книга вам не принадлежит.");
+                    return;
+                }
+            }
+            catch
+            {
+                SendStatusError(connection, "Внутренняя ошибка с базой данных.");
+                return;
+            }
+
+            // Deleting book
+            try
+            {
+                Conn.DeleteBook(bookMessage.BookId);
+                SendStatusOk(connection, "Книга удалена из базы.");
+            }
+            catch (Exception e)
+            {
+                SendStatusError(connection, "Книга не удалена: " + e.Message);
+            }
+        }
     }
 }

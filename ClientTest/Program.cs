@@ -48,6 +48,10 @@ namespace ClientTest
                 Console.ReadLine();
                 msg = MessageFactory.MakeGetBookMessage(TOKEN, ID);
                 connection.Send(msg);
+                Console.WriteLine("ВНИМАНИЕ, УДАЛЕНИЕ");
+                Console.ReadLine();
+                msg = MessageFactory.MakeDeleteBookMessage(TOKEN, ID);
+                connection.Send(msg);
 
                 Console.Read();
                 connection.Close();

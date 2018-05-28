@@ -21,7 +21,9 @@ namespace SmartReader.Database
             { "insert-book",        "INSERT INTO book (content, title) VALUES (@Content, @Title)" },
             { "insert-book-login",  "INSERT INTO book_login (login, book_id) VALUES (@Login, @BookId)" },
             { "get-book-list",      "SELECT book_id, title, offset FROM book INNER JOIN book_login USING (book_id) WHERE login = @Login" },
-            { "get-book",           "SELECT content FROM book WHERE book_id = @BookId" }
+            { "get-book",           "SELECT content FROM book WHERE book_id = @BookId" },
+            { "delete-book",        "DELETE FROM book WHERE book_id = @BookId" },
+            { "person-has-book",    "SELECT 1 FROM book_login WHERE book_id = @BookId AND login = @Login" }
         };
         public void InsertUser(string login, string hashedPassword)
         {
@@ -167,6 +169,37 @@ namespace SmartReader.Database
             catch (Exception e)
             {
                 throw new Exception("Книга отсутствует в базе данных. " + e.Message);
+            }
+        }
+
+        public void DeleteBook(int bookId)
+        {
+            MySqlCommand cmd = new MySqlCommand(Query["delete-book"], Conn);
+            cmd.Parameters.AddWithValue("@BookId", bookId);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Этой книги не существует.");
+            }
+        }
+        public bool HasBook(string login, int bookId)
+        {
+            MySqlCommand cmd = new MySqlCommand(Query["person-has-book"], Conn);
+            cmd.Parameters.AddWithValue("@Login", login);
+            cmd.Parameters.AddWithValue("@BookId", bookId);
+            try
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    return reader.Read();
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("Внутренняя ошибка. Проблема с базой данных.");
             }
         }
     }

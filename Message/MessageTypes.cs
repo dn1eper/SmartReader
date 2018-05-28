@@ -25,8 +25,8 @@ namespace SmartReader.Message
         BookList,
         GetBook,
         Book,
-        // Мы тут
         DeleteBook,
+        // Мы тут
         AddBookmark,
         DeleteBookmark,
     }

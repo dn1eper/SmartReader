@@ -46,6 +46,7 @@
     <Compile Include="Implementations\AuthenticationResponseMessage.cs" />
     <Compile Include="Implementations\BookListMessage.cs" />
     <Compile Include="Implementations\BookMessage.cs" />
+    <Compile Include="Implementations\DeleteBookMessage.cs" />
     <Compile Include="Implementations\GetBookListMessage.cs" />
     <Compile Include="Implementations\GetBookMessage.cs" />
     <Compile Include="Implementations\RegistrationMessage.cs" />
