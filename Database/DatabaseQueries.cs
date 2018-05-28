@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using SmartReader.Library.Book;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,22 @@ namespace SmartReader.Database
 {
     public partial class DatabaseConnection
     {
-        private const string InsertUserQuery = "INSERT INTO person (login, pass_hash) VALUES (@Login, @PassHash)";
-        private const string GetPersonPassByLoginQuery = "SELECT pass_hash FROM person WHERE login = @Login";
-        private const string InsertTokenQuery = "INSERT INTO token (login, token) VALUES (@Login, @Token)";
-        private const string GetTokenForLoginQuery = "SELECT token FROM token WHERE login = @Login";
-        private const string GetLoginForTokenQuery = "SELECT login FROM token WHERE token = @Token";
-        private const string InsertBookQuery = "INSERT INTO book (content, title) VALUES (@Content, @Title)";
-        private const string InsertBookLoginQuery = "INSERT INTO book_login (login, book_id) VALUES (@Login, @BookId)";
+        private Dictionary<string, string> Query = new Dictionary<string, string>()
+        {
+            { "insert-user",        "INSERT INTO person (login, pass_hash) VALUES (@Login, @PassHash)" },
+            { "get-pass-hash",      "SELECT pass_hash FROM person WHERE login = @Login" },
+            { "insert-token",       "INSERT INTO token (login, token) VALUES (@Login, @Token)"},
+            { "get-token",          "SELECT token FROM token WHERE login = @Login" },
+            { "get-login",          "SELECT login FROM token WHERE token = @Token"},
+            { "insert-book",        "INSERT INTO book (content, title) VALUES (@Content, @Title)" },
+            { "insert-book-login",  "INSERT INTO book_login (login, book_id) VALUES (@Login, @BookId)" },
+            { "get-book-list",      "SELECT book_id, title, offset FROM book INNER JOIN book_login USING (book_id) WHERE login = @Login" },
+            { "get-book",           "SELECT content FROM book WHERE book_id = @BookId" }
+        };
         public void InsertUser(string login, string hashedPassword)
         {
-            
-            MySqlCommand cmd = new MySqlCommand(InsertUserQuery, Conn);
+
+            MySqlCommand cmd = new MySqlCommand(Query["insert-user"], Conn);
             cmd.Parameters.AddWithValue("@Login", login);
             cmd.Parameters.AddWithValue("@PassHash", hashedPassword);
 
@@ -28,7 +34,7 @@ namespace SmartReader.Database
             {
                 cmd.ExecuteNonQuery();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new Exception(message: "Пользователь с таким логином существует.");
             }
@@ -36,11 +42,11 @@ namespace SmartReader.Database
 
         public string GetPersonPassHash(string login)
         {
-            MySqlCommand cmd = new MySqlCommand(GetPersonPassByLoginQuery, Conn);
+            MySqlCommand cmd = new MySqlCommand(Query["get-pass-hash"], Conn);
             cmd.Parameters.AddWithValue("@Login", login);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                if(reader.Read())
+                if (reader.Read())
                 {
                     return reader.GetString(0);
                 }
@@ -53,7 +59,7 @@ namespace SmartReader.Database
 
         public void InsertToken(string login, string token)
         {
-            MySqlCommand cmd = new MySqlCommand(InsertTokenQuery, Conn);
+            MySqlCommand cmd = new MySqlCommand(Query["insert-token"], Conn);
             cmd.Parameters.AddWithValue("@Login", login);
             cmd.Parameters.AddWithValue("@Token", token);
             try
@@ -68,16 +74,43 @@ namespace SmartReader.Database
 
         public string GetTokenFor(string login)
         {
-            MySqlCommand cmd = new MySqlCommand(GetTokenForLoginQuery, Conn);
+            MySqlCommand cmd = new MySqlCommand(Query["get-token"], Conn);
             cmd.Parameters.AddWithValue("@Login", login);
             return GetOneStringValue(cmd);
         }
 
         public string GetLoginFor(string token)
         {
-            MySqlCommand cmd = new MySqlCommand(GetLoginForTokenQuery, Conn);
+            MySqlCommand cmd = new MySqlCommand(Query["get-login"], Conn);
             cmd.Parameters.AddWithValue("@Token", token);
             return GetOneStringValue(cmd);
+        }
+
+        public List<BookInfo> GetBookListFor(string login)
+        {
+            MySqlCommand cmd = new MySqlCommand(Query["get-book-list"], Conn);
+            cmd.Parameters.AddWithValue("@Login", login);
+            List<BookInfo> buffer = new List<BookInfo>();
+            try
+            {
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        buffer.Add(new BookInfo()
+                        {
+                            Id = reader.GetInt32(0),
+                            Title = reader.GetString(1),
+                            Offset = reader.GetUInt64(2)
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Ошибка в базе данных:" + e.Message);
+            }
+            return buffer;
         }
 
         private string GetOneStringValue(MySqlCommand cmd)
@@ -97,7 +130,7 @@ namespace SmartReader.Database
 
         public void InsertBookFor(string login, string title, string content)
         {
-            MySqlCommand bookCmd = new MySqlCommand(InsertBookQuery, Conn);
+            MySqlCommand bookCmd = new MySqlCommand(Query["insert-book"], Conn);
             bookCmd.Parameters.AddWithValue("@Title", title);
             bookCmd.Parameters.AddWithValue("@Content", content);
             try
@@ -110,7 +143,7 @@ namespace SmartReader.Database
             }
 
             long bookId = bookCmd.LastInsertedId;
-            MySqlCommand bookLoginCmd = new MySqlCommand(InsertBookLoginQuery, Conn);
+            MySqlCommand bookLoginCmd = new MySqlCommand(Query["insert-book-login"], Conn);
             bookLoginCmd.Parameters.AddWithValue("@Login", login);
             bookLoginCmd.Parameters.AddWithValue("@BookId", bookId);
             try
@@ -120,6 +153,20 @@ namespace SmartReader.Database
             catch (Exception)
             {
                 throw new Exception("Проблема с базой данных. Личная информация о книгах не обновлена.");
+            }
+        }
+
+        public string GetBookContent(int bookId)
+        {
+            MySqlCommand bookCmd = new MySqlCommand(Query["get-book"], Conn);
+            bookCmd.Parameters.AddWithValue("@BookId", bookId);
+            try
+            {
+                return GetOneStringValue(bookCmd);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Книга отсутствует в базе данных. " + e.Message);
             }
         }
     }

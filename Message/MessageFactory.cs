@@ -1,4 +1,6 @@
-﻿using SmartReader.Message.Implementations;
+﻿using SmartReader.Library.Book;
+using SmartReader.Message.Implementations;
+using System.Collections.Generic;
 
 namespace SmartReader.Message
 {
@@ -34,6 +36,19 @@ namespace SmartReader.Message
         public static IMessage MakeGetBookListMessage(string token)
         {
             return new GetBookListMessage() { Token = token };
+        }
+        public static IMessage MakeBookListMessage(List<BookInfo> bookList)
+        {
+            return new BookListMessage() { Books = bookList };
+        }
+
+        public static IMessage MakeGetBookMessage(string token, int bookId)
+        {
+            return new GetBookMessage() { Token = token, BookId = bookId };
+        }
+        public static IMessage MakeBookMessage(int bookId, string content)
+        {
+            return new BookMessage() { Content = content, BookId = bookId };
         }
     }
 }

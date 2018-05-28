@@ -13,6 +13,7 @@ namespace ClientTest
     class Program
     {
         private static string TOKEN;
+        private static int ID;
         static void Main(string[] args)
         {
 
@@ -25,13 +26,29 @@ namespace ClientTest
                 connection.Send(msg);
                 msg = MessageFactory.MakeAuthenticateMessage("admin", "asd");
                 connection.Send(msg);
-                msg = MessageFactory.MakeAuthenticateMessage("admin", "password");
-                connection.Send(msg);
+                
                 msg = MessageFactory.MakeAuthenticateMessage("admin1", "asd");
                 connection.Send(msg);
+
                 Console.ReadLine();
+                msg = MessageFactory.MakeAuthenticateMessage("admin", "password");
+                connection.Send(msg);
+                Console.ReadLine();
+
                 msg = MessageFactory.MakeUploadBookMessage("Martin Iden", "Good book!", TOKEN);
                 connection.Send(msg);
+                msg = MessageFactory.MakeUploadBookMessage("Jordano Bruno", "Good Song!", TOKEN);
+                connection.Send(msg);
+
+                Console.ReadLine();
+
+                msg = MessageFactory.MakeGetBookListMessage(TOKEN);
+                connection.Send(msg);
+
+                Console.ReadLine();
+                msg = MessageFactory.MakeGetBookMessage(TOKEN, ID);
+                connection.Send(msg);
+
                 Console.Read();
                 connection.Close();
             }
@@ -57,6 +74,16 @@ namespace ClientTest
                 case MessageTypes.Status:
                     Console.WriteLine("Status: " + (args.Message as StatusMessage).Status);
                     Console.WriteLine("Message: " + (args.Message as StatusMessage).Text);
+                    break;
+                case MessageTypes.BookList:
+                    BookListMessage m = args.Message as BookListMessage;
+                    Console.WriteLine("Count: " + m.Books.Count);
+                    ID = m.Books[0].Id;
+                    Console.WriteLine("ID = " + ID);
+                    break;
+                case MessageTypes.Book:
+                    BookMessage mm = args.Message as BookMessage;
+                    Console.WriteLine("Content of a book: " + mm.Content);
                     break;
             }
         }

@@ -12,8 +12,10 @@ CREATE TABLE person (
 );
 
 CREATE TABLE book_login (
-	login VARCHAR(100) PRIMARY KEY,
+	login VARCHAR(100),
 	book_id INT,
+	offset BIGINT UNSIGNED DEFAULT 0 NOT NULL,
+	PRIMARY KEY (login, book_id),
 	FOREIGN KEY (login)
 	REFERENCES person(login),
 	FOREIGN KEY (book_id)

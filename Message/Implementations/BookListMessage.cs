@@ -8,6 +8,6 @@ namespace SmartReader.Message.Implementations
     public class BookListMessage : IMessage
     {
         public MessageTypes Type => MessageTypes.BookList;
-        public List<BookRecord> BookList;
+        public List<BookInfo> Books { get; set; }
     }
 }

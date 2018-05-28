@@ -49,5 +49,11 @@
   <ItemGroup>
     <Content Include="Scheme.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.csproj">
+      <Project>{1a7c36e3-c641-4e23-a627-8d066e647bae}</Project>
+      <Name>Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
