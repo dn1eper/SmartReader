@@ -177,6 +177,8 @@ namespace SmartReader.Server
             try
             {
                 string content = Conn.GetBookContent(bookId);
+                // return title
+                // and content as byte[]
                 connection.Send(MessageFactory.MakeBookMessage(bookId, content));
             }
             catch (Exception e)

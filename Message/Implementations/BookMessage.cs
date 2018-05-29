@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartReader.Message.Implementations
 {
@@ -11,6 +7,7 @@ namespace SmartReader.Message.Implementations
     {
         public MessageTypes Type => MessageTypes.Book;
         public Int32 BookId { get; set; }
+        public string Title { get; set; }
         public string Content { get; set; }
     }
 }
