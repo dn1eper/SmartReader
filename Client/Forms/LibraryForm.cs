@@ -135,21 +135,39 @@ namespace SmartReader.Client.Forms
             }
         }
 
-        // Удалить книжку локально и с сервера (не файл а ссылку)
+        // Диалог удаления книжки 
         private void OnDelete(object sender, EventArgs e)
         {
+            bool isRemote = IsRemoteSelectedBook;
+            bool isLocal = IsLocalSelectedBook;
+
             // Если удаляемая книга находится на сервере, полылаем на сервер запрос на удаление
-            if (IsRemoteSelectedBook)
+            if (isRemote)
             {
-                int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[5].Value);
-                DeleteRemoteBook(id);
+                if (MessageBox.Show("Do you want to delete the book from your remote library?", "Delete book",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[5].Value);
+                    DeleteRemoteBook(id);
+                    isRemote = false;
+                }
             }
             // И удаляем ее локально
-            if (IsLocalSelectedBook)
+            if (isLocal)
             {
-                Storage.DeleteBook(SelectedBook);
+                if (MessageBox.Show("Do you want to delete the book from your local library?", "Delete book",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Storage.DeleteBook(SelectedBook);
+                    isLocal = false;
+                }
             }
-            dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
+            // Удаляем книжку из таблицы
+            if (!(isLocal || isRemote)) dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
+            else if (isLocal) DrawBooksTable();
+            else if (isRemote) OnShown(sender, e);
         }
 
         // Изменение выбранной строчки в таблице
@@ -165,22 +183,25 @@ namespace SmartReader.Client.Forms
         private void OnShown(object sender, EventArgs e)
         {
             if (Token.IsEmpty()) statusLabel.Text = "Not signed";
-            else if (Connection != null) statusLabel.Text = "Online";
+            else if (Connection != null)
+            {
+                statusLabel.Text = "Online";
 
-            // Загрузка списка книг с сервера
-            for (int i = 0; i < 3 && RemoteBooks == null; i++)
-            {
-                LoadBookList();
-                // Задержка для получения книжек
-                System.Threading.Thread.Sleep(300);
+                // Загрузка списка книг с сервера
+                for (int i = 0; i < 3 && RemoteBooks == null; i++)
+                {
+                    LoadBookList();
+                    // Задержка для получения книжек
+                    System.Threading.Thread.Sleep(300);
+                }
+                if (RemoteBooks != null)
+                {
+                    DrawBooksTable();
+                    UpdateStatusLabel();
+                    return;
+                }
+                else statusLabel.Text = "Can't load books list.";
             }
-            if (RemoteBooks != null)
-            {
-                DrawBooksTable();
-                UpdateStatusLabel();
-                return;
-            }
-            else statusLabel.Text = "Can't load books list.";
         }
 
         // Обновляет статус
