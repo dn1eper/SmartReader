@@ -177,8 +177,15 @@ namespace SmartReader.Server
             int bookId = bookMessage.BookId;
             try
             {
+<<<<<<< HEAD
+                string content = Conn.GetBookContent(bookId);
+                string title = Conn.GetBookTitle(bookId);
+                // and content as byte[]
+                connection.Send(MessageFactory.MakeBookMessage(bookId, content, title));
+=======
                 byte[] content = Conn.GetBookContent(bookId);
                 connection.Send(MessageFactory.MakeBookMessage(bookId, content));
+>>>>>>> mrexox
             }
             catch (Exception e)
             {

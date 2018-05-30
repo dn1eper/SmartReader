@@ -19,6 +19,7 @@ namespace ClientTest
 
             using (IConnection connection = NetworkingFactory.OpenConnection("localhost", 8080))
             {
+                Console.ReadLine();
                 connection.Open();
                 connection.MessageReceived += OnMessage;
                 IMessage msg;
@@ -35,9 +36,9 @@ namespace ClientTest
                 connection.Send(msg);
                 Console.ReadLine();
 
-                msg = MessageFactory.MakeUploadBookMessage("Martin Iden", "Good book!", TOKEN);
+                msg = MessageFactory.MakeUploadBookMessage("Мартин Иден", "Ничё так!", TOKEN);
                 connection.Send(msg);
-                msg = MessageFactory.MakeUploadBookMessage("Jordano Bruno", "Good Song!", TOKEN);
+                msg = MessageFactory.MakeUploadBookMessage("Русское Книго", "ЧТо-то тут не так!", TOKEN);
                 connection.Send(msg);
 
                 Console.ReadLine();
@@ -84,10 +85,11 @@ namespace ClientTest
                     Console.WriteLine("Count: " + m.Books.Count);
                     ID = m.Books[0].Id;
                     Console.WriteLine("ID = " + ID);
+                    Console.WriteLine("ID's title: " + m.Books[0].Title);
                     break;
                 case MessageTypes.Book:
                     BookMessage mm = args.Message as BookMessage;
-                    Console.WriteLine("Content of a book: " + mm.Content);
+                    Console.WriteLine("Content of a book: " + Encoding.Default.GetString(mm.Content));
                     break;
             }
         }

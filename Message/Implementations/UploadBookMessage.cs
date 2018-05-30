@@ -10,7 +10,7 @@ namespace SmartReader.Message.Implementations
     public class UploadBookMessage : IMessage
     {
         public MessageTypes Type => MessageTypes.UploadBook;
-        public string Content { get; set; }
+        public byte[] Content { get; set; }
         public string Title { get; set; }
         public string Token { get; set; }
     }

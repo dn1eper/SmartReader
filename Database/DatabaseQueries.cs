@@ -103,7 +103,7 @@ namespace SmartReader.Database
                         buffer.Add(new BookInfo()
                         {
                             Id = reader.GetInt32(0),
-                            Title = reader.GetString(1),
+                            Title = Encoding.Default.GetString(GetBytesFromColumn(reader, 1)),
                             Offset = reader.GetUInt64(2)
                         });
                     }
@@ -131,10 +131,12 @@ namespace SmartReader.Database
             }
         }
 
-        public void InsertBookFor(string login, string title, string content)
+
+
+        public void InsertBookFor(string login, string title, byte[] content)
         {
             MySqlCommand bookCmd = new MySqlCommand(Query["insert-book"], Conn);
-            bookCmd.Parameters.AddWithValue("@Title", title);
+            bookCmd.Parameters.AddWithValue("@Title", Encoding.Default.GetBytes(title));
             bookCmd.Parameters.AddWithValue("@Content", content);
             try
             {
@@ -159,13 +161,39 @@ namespace SmartReader.Database
             }
         }
 
-        public string GetBookContent(int bookId)
+        private byte[] GetBytesFromColumn(MySqlDataReader reader, int column)
+        {
+
+            int length = (int)reader.GetBytes(column, 0, null, 0, 0);
+            byte[] buffer = new byte[length];
+            int index = 0;
+
+            while (index < length)
+            {
+                int bytesRead = (int)reader.GetBytes(column, index,
+                                                buffer, index, length - index);
+                index += bytesRead;
+            }
+            return buffer;
+
+        }
+        public byte[] GetBookContent(int bookId)
         {
             MySqlCommand bookCmd = new MySqlCommand(Query["get-book"], Conn);
             bookCmd.Parameters.AddWithValue("@BookId", bookId);
             try
             {
-                return GetOneStringValue(bookCmd);
+                using (MySqlDataReader reader = bookCmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return GetBytesFromColumn(reader, 0);
+                    }
+                    else
+                    {
+                        throw new Exception("Нет данных или ошибка во время получения книги.");
+                    }
+                }
             }
             catch (Exception e)
             {

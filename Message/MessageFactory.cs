@@ -1,6 +1,7 @@
 ﻿using SmartReader.Library.Book;
 using SmartReader.Message.Implementations;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SmartReader.Message
 {
@@ -31,6 +32,11 @@ namespace SmartReader.Message
         }
         public static IMessage MakeUploadBookMessage(string title, string text, string token)
         {
+            return new UploadBookMessage() { Title = title, Content = Encoding.Default.GetBytes(text), Token = token };
+        }
+
+        public static IMessage MakeUploadBookMessage(string title, byte[] text, string token)
+        {
             return new UploadBookMessage() { Title = title, Content = text, Token = token };
         }
         public static IMessage MakeGetBookListMessage(string token)
@@ -48,7 +54,11 @@ namespace SmartReader.Message
         }
         public static IMessage MakeBookMessage(int bookId, string content, string title)
         {
-            return new BookMessage() { Content = content, BookId = bookId, Title = title };
+            return new BookMessage() { Content = Encoding.Default.GetBytes(content), BookId = bookId };
+        }
+        public static IMessage MakeBookMessage(int bookId, byte[] content)
+        {
+            return new BookMessage() { Content = content, BookId = bookId };
         }
 
         public static IMessage MakeDeleteBookMessage(string token, int bookId)

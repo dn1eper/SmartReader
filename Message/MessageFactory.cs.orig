@@ -1,4 +1,7 @@
-﻿using SmartReader.Message.Implementations;
+﻿using SmartReader.Library.Book;
+using SmartReader.Message.Implementations;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SmartReader.Message
 {
@@ -18,18 +21,53 @@ namespace SmartReader.Message
             return new StatusMessage() { Status = status, Text = text };
         }
 
-        public static IMessage MakeAuthenticateTokenMessage(string token)
-        {
-<<<<<<< HEAD
-            return new AuthenticateTokenMessage(token);
-        }
-
         public static IMessage MakeRegistrationMessage(string login, string password, string email)
         {
-            throw new System.NotImplementedException();
+            return new RegistrationMessage() { Login = login, Password = password };
+        }
+
+        public static IMessage MakeAuthenticationResposeMessage(string token, Status status=Status.Ok, string message="")
+        {
+            return new AuthenticationResponseMessage() { Status = status, Token = token, Message = message};
+        }
+        public static IMessage MakeUploadBookMessage(string title, string text, string token)
+        {
+            return new UploadBookMessage() { Title = title, Content = Encoding.Default.GetBytes(text), Token = token };
+        }
+
+        public static IMessage MakeUploadBookMessage(string title, byte[] text, string token)
+        {
+            return new UploadBookMessage() { Title = title, Content = text, Token = token };
+        }
+        public static IMessage MakeGetBookListMessage(string token)
+        {
+            return new GetBookListMessage() { Token = token };
+        }
+        public static IMessage MakeBookListMessage(List<BookInfo> bookList)
+        {
+            return new BookListMessage() { Books = bookList };
+        }
+
+        public static IMessage MakeGetBookMessage(string token, int bookId)
+        {
+            return new GetBookMessage() { Token = token, BookId = bookId };
+        }
+        public static IMessage MakeBookMessage(int bookId, string content, string title)
+        {
+<<<<<<< HEAD
+            return new BookMessage() { Content = content, BookId = bookId, Title = title };
 =======
-            return new AuthenticateResponseMessage() { Token = token };
+            return new BookMessage() { Content = Encoding.Default.GetBytes(content), BookId = bookId };
+        }
+        public static IMessage MakeBookMessage(int bookId, byte[] content)
+        {
+            return new BookMessage() { Content = content, BookId = bookId };
 >>>>>>> mrexox
+        }
+
+        public static IMessage MakeDeleteBookMessage(string token, int bookId)
+        {
+            return new DeleteBookMessage() { Token = token, BookId = bookId };
         }
     }
 }
