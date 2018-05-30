@@ -38,7 +38,7 @@ namespace SmartReader.Client.Forms
                 {
                     string path = dataGridView.SelectedRows[0].Cells[4].Value as string;
                     string owner = Config.GetValue("Username");
-                    if (owner == "") owner = null;
+                    if (owner.IsEmpty()) owner = null;
                     int index = LocalBooks.IndexOf(new BookRecord() { Path = path, Offset = 0, Owner = owner });
                     return LocalBooks[index];
                 }
@@ -67,21 +67,22 @@ namespace SmartReader.Client.Forms
             }
         }
 
-        public LibraryForm(LibraryStorage storage, ConfigStorage config)
+        public LibraryForm(LibraryStorage storage, ConfigStorage config, IConnection connection)
         {
             InitializeComponent();
             Storage = storage;
             Config = config;
+            Connection = connection;
             dataGridView.SelectionChanged += OnSelectionChanged;
 
+            UpdateStatusLabel();
             DrawBooksTable();
-        }
-        public LibraryForm(LibraryStorage storage, ConfigStorage config, IConnection connection) : this(storage, config)
-        {
-            Connection = connection;
-            Connection.MessageReceived += OnIncomingMessage;
-            
-            Shown += OnShown;
+
+            if (IsConnected)
+            {
+                Connection.MessageReceived += OnIncomingMessage;
+                Shown += OnShown;
+            }
         }
 
         #region Оконные события

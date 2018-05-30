@@ -8,8 +8,14 @@ namespace SmartReader.Library.Storage
 
     public class ConfigStorage : XmlStorage
     {
+        /// <summary>
+        /// Параметры приложения
+        /// </summary>
         public List<ConfigRecord> Configs { get; private set; }
 
+        /// <summary>
+        /// Локальное хранилище параметров приложения
+        /// </summary>
         public ConfigStorage() :
             base(@"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader",
                 "config.xml",
@@ -18,6 +24,9 @@ namespace SmartReader.Library.Storage
             Load();
         }
 
+        /// <summary>
+        /// Загружает параметры приложения с диска в буфер
+        /// </summary>
         public override void Load()
         {
             if (file.Exists)
@@ -30,6 +39,10 @@ namespace SmartReader.Library.Storage
             else Configs = new List<ConfigRecord>();
         }
 
+        /// <summary>
+        /// Возвращает значение заданного параметра
+        /// </summary>
+        /// <param name="name">Имя параметра</param>
         public string GetValue(string name)
         {
             ConfigRecord config = new ConfigRecord()
@@ -41,6 +54,11 @@ namespace SmartReader.Library.Storage
             else return "";
         }
 
+        /// <summary>
+        /// Устанавливает значение заданного параметра
+        /// </summary>
+        /// <param name="name">Имя параметра</param>
+        /// <param name="value">Значение параметра</param>
         public void SetValue(string name, string value)
         {
             ConfigRecord config = new ConfigRecord()
@@ -55,6 +73,9 @@ namespace SmartReader.Library.Storage
             Configs.Add(config);
         }
 
+        /// <summary>
+        /// Сохраняет на диск из буфера информацию о всех параметрах
+        /// </summary>
         public override void Save()
         {
             file.Delete();

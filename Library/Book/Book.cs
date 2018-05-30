@@ -6,25 +6,17 @@ namespace SmartReader.Library.Book
 {
     public class Book : IDisposable
     {
-        // TODO: добавить вывод текущей страницы и общего числа страниц.
-
-        // TODO: переработать метод PreviousPage.
-        // он делает не корректное смещение на более чем одну страницу
-        // так как основывается на LinesOnPreviousPage (только предыдущая страница)
-
-        // TODO: устранить ошибку, при которой переход на предыдущую страницу с самой
-        // последней осуществляется не совсем корректно.
-
         private FileInfo file;
         private BookReader bookReader;
 
         public event EventHandler BookOpend;
-        public event EventHandler BookClosed;
+        public event EventHandler BookClosing;
 
         private int pageWidth;
         private int pageHeight;
         private int LineWidth => pageWidth / 9;
         private int LinesCount => pageHeight / 24;
+        private string Owner;
         private int _offset;
         // TODO: Избыточные поля, желаетльно от них избавиться
         private int LinesOnPreviousPage;
@@ -78,7 +70,8 @@ namespace SmartReader.Library.Book
                 return new BookRecord()
                 {
                     Path = FullName,
-                    Offset = Offset
+                    Offset = Offset,
+                    Owner = Owner
                 };
             }
         }
@@ -91,10 +84,11 @@ namespace SmartReader.Library.Book
         /// <param name="pageWidth">Ширина страницы</param>
         /// <param name="pageHeight">Высота страницы</param>
         /// <param name="offset">Смещение от начала книги</param>
-        public Book(string path, int pageWidth, int pageHeight, int offset = 0)
+        public Book(string path, int pageWidth, int pageHeight, string owner = null, int offset = 0)
         {
             file = new FileInfo(path);
             _offset = offset;
+            Owner = owner;
             this.pageWidth = pageWidth;
             this.pageHeight = pageHeight;
         }
@@ -108,6 +102,7 @@ namespace SmartReader.Library.Book
         {
             file = new FileInfo(record.Path);
             _offset = record.Offset;
+            Owner = record.Owner;
             this.pageWidth = pageWidth;
             this.pageHeight = pageHeight;
         }
@@ -207,7 +202,7 @@ namespace SmartReader.Library.Book
         {
             if (IsOpend)
             {
-                BookClosed(this, new EventArgs());
+                BookClosing(this, new EventArgs());
                 Dispose();
                 bookReader = null;
             }
@@ -221,4 +216,12 @@ namespace SmartReader.Library.Book
             if (IsOpend) bookReader.Dispose();
         }
     }
+    // TODO: добавить вывод текущей страницы и общего числа страниц.
+
+    // TODO: переработать метод PreviousPage.
+    // он делает не корректное смещение на более чем одну страницу
+    // так как основывается на LinesOnPreviousPage (только предыдущая страница)
+
+    // TODO: устранить ошибку, при которой переход на предыдущую страницу с самой
+    // последней осуществляется не совсем корректно.
 }

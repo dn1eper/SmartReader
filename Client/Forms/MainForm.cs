@@ -28,7 +28,7 @@ namespace SmartReader.Client.Forms
             InitializeComponent();
             richTextBox.MouseWheel += new MouseEventHandler(OnMouseWheel);
             IsFullScreen = false;
-            // Инициализируем локальное хранилище
+            // Инициализируем локальные хранилища
             Storage = new LibraryStorage();
             Config = new ConfigStorage();
             Username = Config.GetValue("Username");
@@ -51,18 +51,15 @@ namespace SmartReader.Client.Forms
         // Диалог библиотеки (список всех книг)
         private void OnLibraryDialog(object sender, EventArgs e)
         {
-            LibraryForm libraryDialog;
-            if (Connection == null || Token.IsEmpty()) libraryDialog = new LibraryForm(Storage, Config);
-            else libraryDialog = new LibraryForm(Storage, Config, Connection);  
-            
-            if (libraryDialog.ShowDialog() == DialogResult.OK)
+            using (LibraryForm libraryDialog = new LibraryForm(Storage, Config, Connection))
             {
-                // Закрываем открытую книгу если нужно
-                if (IsBookOpend) book.Close();
-                // Открываем выбранную книгу
-                OpenBook(libraryDialog.SelectedBook);
+                if (libraryDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Открываем выбранную книгу
+                    BookRecord selectedBook = libraryDialog.SelectedBook;
+                    if (selectedBook != book.BookRecord) OpenBook(selectedBook);
+                }
             }
-            libraryDialog.Dispose();
         }
 
         // Диалог входа в акаунт
@@ -76,11 +73,9 @@ namespace SmartReader.Client.Forms
             {
                 using (AccountForm accountDialog = new AccountForm(Username))
                 {
-                    switch (accountDialog.ShowDialog())
+                    if (accountDialog.ShowDialog() == DialogResult.No)
                     {
-                        case DialogResult.No:
-                            Logout();
-                            break;
+                        Logout();
                     }
                 }
             }
@@ -120,11 +115,10 @@ namespace SmartReader.Client.Forms
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                // Если была открыта книжка до этого, закрыаем ее
-                if (IsBookOpend) book.Close();
                 // Если эту книжку уже открывали, то нужно октыть ее с сохнененным смещением
                 // для этого нужно получить запись для этой книжки из хранилища
-                BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName);
+                string owner = Username.IsEmpty() ? null : Username;
+                BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName, owner);
                 OpenBook(bookRecord);
             }
         }
@@ -132,13 +126,11 @@ namespace SmartReader.Client.Forms
         // Уведомление
         private void MessageBoxDialog(string message, MessageBoxIcon icon = MessageBoxIcon.Error, string caption = "")
         {
-            MessageBox.Show(message, caption,
-                            MessageBoxButtons.OK,
-                            icon);
+            MessageBox.Show(message, caption, MessageBoxButtons.OK, icon);
         }
         #endregion
 
-        #region Оконные события
+        #region Книжные события
         // Открывает книжку
         private void OpenBook(BookRecord bookRecord)
         {
@@ -146,7 +138,7 @@ namespace SmartReader.Client.Forms
 
             book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
             book.BookOpend += OnBookOpend;
-            book.BookClosed += OnBookClosed;
+            book.BookClosing += OnBookClosing;
             book.Open();
 
             if (!Token.IsEmpty()) bookRecord.Owner = Username;
@@ -166,67 +158,80 @@ namespace SmartReader.Client.Forms
             }
         }
 
-        // Выход из приложения
-        private void OnExit(object sender, EventArgs e)
-        {
-            if (IsBookOpend)
-            {
-                book.Close();
-                Storage.Save();
-                Config.Save();
-            }
-            Close();
-        }
-
         // Действия при открытии книжки
         private void OnBookOpend(object sender, EventArgs e)
         {
             // Отображаем первую страницу
-            OnNextPage();
-            // Активируем соответствующие кнопки меню
-            addBookmarkMenuItem.Enabled = true;
-            bookmarksMenuItem.Enabled = true;
+            OnNextPage(sender, e);
+            // Активируем кнопки уравления книжкой
             nextPageMenuItem.Enabled = true;
             previousPageMenuItem.Enabled = true;
+            // Пока не реализовано
+            //addBookmarkMenuItem.Enabled = true;
+            //bookmarksMenuItem.Enabled = true;
         }
 
         // Действия при закрытии книжки
-        private void OnBookClosed(object sender, EventArgs e)
+        private void OnBookClosing(object sender, EventArgs e)
         {
+            // Очищаем текст
             richTextBox.Text = "";
-            //Book oldBook = sender as Book;
+            // Деактивируем кнопки управления книжкой
+            addBookmarkMenuItem.Enabled = false;
+            bookmarksMenuItem.Enabled = false;
+            nextPageMenuItem.Enabled = false;
+            previousPageMenuItem.Enabled = false;
             // Сохраняем сведения о книжке в хранилище
-            //Storage.AddBook(oldBook.BookRecord);
+            Book oldBook = sender as Book;
+            if (Storage.AddBook(oldBook.BookRecord))
+            {
+                Storage.DeleteBook(oldBook.BookRecord);
+            }
+        }
+
+        // Переход на следующую страницу книги
+        private void OnNextPage(object sender, EventArgs e)
+        {
+            if (IsBookOpend)
+            {
+                richTextBox.Text = book.NextPage();
+            }
+        }
+
+        // Переход на предыдущую страницу книги
+        private void OnPreviousPage(object sender, EventArgs e)
+        {
+            if (IsBookOpend)
+            {
+                richTextBox.Text = book.PreviousPage();
+            }
+        }
+        #endregion
+
+        #region Оконные события
+        // Действия перед закрытием программы
+        private void OnExit(object sender, EventArgs e)
+        {
+            if (IsBookOpend) book.Close();
+            Storage.Save();
+            Config.Save();
+            Close();
         }
 
         // Изменение объема текста на странице в зависимости от размера окна
         private void OnResize(object sender, EventArgs e)
         {
-            if (!IsBookOpend) return;
-            richTextBox.Text = book.ReloadPage(richTextBox.Width, richTextBox.Height);
-        }
-
-        // Переход на следующую страницу книги
-        private void OnNextPage(object sender, EventArgs e) => OnNextPage();
-        private void OnNextPage()
-        {
-            if (!IsBookOpend) return;
-            richTextBox.Text = book.NextPage();
-        }
-
-        // Переход на предыдущую страницу книги
-        private void OnPreviousPage(object sender, EventArgs e) => OnPreviousPage();
-        private void OnPreviousPage()
-        {
-            if (!IsBookOpend) return;
-            richTextBox.Text = book.PreviousPage();
+            if (IsBookOpend)
+            {
+                richTextBox.Text = book.ReloadPage(richTextBox.Width, richTextBox.Height);
+            }
         }
 
         // Перелистывание страниц прокруткой мыши
         private void OnMouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0) OnPreviousPage();
-            else OnNextPage();
+            if (e.Delta > 0) OnPreviousPage(sender, new EventArgs());
+            else OnNextPage(sender, new EventArgs());
         }
 
         // Поддержка полноэкранного режима
@@ -267,11 +272,11 @@ namespace SmartReader.Client.Forms
                     // Создаем подключение к серверу
                     Connection = NetworkingFactory.OpenConnection("localhost", 8080);
                     Connection.Open();
-                    // Обновляем статус
-                    UpdateStatusLabel();
                     // Вешаем обработчики
                     Connection.MessageReceived += OnIncomingMessage;
                     Connection.Closed += OnConnectionClosed;
+                    // Обновляем статус окна
+                    UpdateStatusLabel();
                 }
                 catch (SocketException)
                 {
@@ -299,9 +304,8 @@ namespace SmartReader.Client.Forms
             if (IsBookOpend) book.Close();
             Config.SetValue("Token", "");
             Config.SetValue("Username", "");
-            Username = "";
-            OpenLastBook();
             UpdateStatusLabel();
+            OpenLastBook();
         }
 
         // Регистрация
