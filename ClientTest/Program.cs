@@ -16,10 +16,11 @@ namespace ClientTest
         private static int ID;
         static void Main(string[] args)
         {
+            Console.WriteLine("Нажмите пробел, когда сервер догрузится.");
+            Console.ReadLine();
 
             using (IConnection connection = NetworkingFactory.OpenConnection("localhost", 8080))
             {
-                Console.ReadLine();
                 connection.Open();
                 connection.MessageReceived += OnMessage;
                 IMessage msg;
