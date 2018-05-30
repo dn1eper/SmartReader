@@ -281,14 +281,15 @@ namespace SmartReader.Client.Forms
         {
             // 1. Сохраняем книгу как файл
             string path = @"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader\" + Config.GetValue("Username");
+            string fullPath = path + @"\" + book.Title + ".txt";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            File.WriteAllText(path + @"\" + book.Title + ".txt", book.Content);
+            File.WriteAllText(fullPath, book.Content);
 
+            // 2. Добавляем ссылку на книгу в LocalStorage
+            Storage.AddBook(new BookRecord() { Path = fullPath, Offset = 0, Owner = Config.GetValue("Username") });
 
-            // TODO: 
-            // 2. Добавить ссылку на нее в LocalStorage
             // 3. Отобразить ее в dataGridView (поствить галочку)
-
+            DrawBooksTable();
 
             MessageBox.Show("Book successfully downloaded!", "Download book.",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);

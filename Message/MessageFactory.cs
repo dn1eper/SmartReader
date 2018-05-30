@@ -46,9 +46,9 @@ namespace SmartReader.Message
         {
             return new GetBookMessage() { Token = token, BookId = bookId };
         }
-        public static IMessage MakeBookMessage(int bookId, string content)
+        public static IMessage MakeBookMessage(int bookId, string content, string title)
         {
-            return new BookMessage() { Content = content, BookId = bookId };
+            return new BookMessage() { Content = content, BookId = bookId, Title = title };
         }
 
         public static IMessage MakeDeleteBookMessage(string token, int bookId)

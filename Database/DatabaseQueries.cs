@@ -22,6 +22,7 @@ namespace SmartReader.Database
             { "insert-book-login",  "INSERT INTO book_login (login, book_id) VALUES (@Login, @BookId)" },
             { "get-book-list",      "SELECT book_id, title, offset FROM book INNER JOIN book_login USING (book_id) WHERE login = @Login" },
             { "get-book",           "SELECT content FROM book WHERE book_id = @BookId" },
+            { "get-book-title",     "SELECT title FROM book WHERE book_id = @BookId" },
             { "delete-book",        "DELETE FROM book WHERE book_id = @BookId" },
             { "person-has-book",    "SELECT 1 FROM book_login WHERE book_id = @BookId AND login = @Login" }
         };
@@ -170,6 +171,13 @@ namespace SmartReader.Database
             {
                 throw new Exception("Книга отсутствует в базе данных. " + e.Message);
             }
+        }
+
+        public string GetBookTitle(int bookId)
+        {
+            MySqlCommand cmd = new MySqlCommand(Query["get-book-title"], Conn);
+            cmd.Parameters.AddWithValue("@BookId", bookId);
+            return GetOneStringValue(cmd);
         }
 
         public void DeleteBook(int bookId)
