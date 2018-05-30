@@ -11,6 +11,6 @@ namespace SmartReader.Message.Implementations
     {
         public MessageTypes Type => MessageTypes.Book;
         public Int32 BookId { get; set; }
-        public string Content { get; set; }
+        public byte[] Content { get; set; }
     }
 }

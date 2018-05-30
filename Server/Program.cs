@@ -20,17 +20,19 @@ namespace SmartReader.Server
         {
             IConnectionListener listener = NetworkingFactory.CreateListener(8080);
             listener.ConnectionEstablished += OnIncomingConnection;
+            Conn = new DatabaseConnection("root", "");
+
             listener.Start();
+
             Console.WriteLine("Server started. Press Enter to stop it.");
             Console.Read();
-            // TODO закрывать соединение с базой
-            // TODO закрывать TCP-соединения
         }
 
         private static void OnIncomingConnection(object sender, ConnectionEventArgs e)
         {
             IConnection connection = e.Connection;
             connection.MessageReceived += OnIncomingMessage;
+            connection.MessageReceived += OnIncomingMessageLogger;
             connection.Closed += OnConnectionClosed;
             Connections.Add(connection);
             connection.Open();
@@ -55,7 +57,28 @@ namespace SmartReader.Server
                 case MessageTypes.Authenticate:
                     HandleAuthentication(message, sender as IConnection);
                     break;
+                case MessageTypes.Registration:
+                    HandleRegistration(message, sender as IConnection);
+                    break;
+                case MessageTypes.UploadBook:
+                    HandleUploadBook(message, sender as IConnection);
+                    break;
+                case MessageTypes.GetBookList:
+                    HandleGetBookList(message, sender as IConnection);
+                    break;
+                case MessageTypes.GetBook:
+                    HandleGetBook(message, sender as IConnection);
+                    break;
+                case MessageTypes.DeleteBook:
+                    HandleDeleteBook(message, sender as IConnection);
+                    break;
             }
+        }
+        private static void OnIncomingMessageLogger(object sender, MessageEventArgs e)
+        {
+            
+            Console.WriteLine("Пришло сообщение: тип=" + (int)e.Message.Type);
+
         }
     }
 }

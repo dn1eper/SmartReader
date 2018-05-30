@@ -74,6 +74,7 @@ namespace SmartReader.Server
             if (passHash == Hash(authMessage.Password))
             {
                 SendToken(authMessage.Login, connection);
+                return;
             } 
             connection.Send(MessageFactory.MakeAuthenticationResposeMessage("", Status.Error, "Пароли не совпадают."));
         }
@@ -176,7 +177,7 @@ namespace SmartReader.Server
             int bookId = bookMessage.BookId;
             try
             {
-                string content = Conn.GetBookContent(bookId);
+                byte[] content = Conn.GetBookContent(bookId);
                 connection.Send(MessageFactory.MakeBookMessage(bookId, content));
             }
             catch (Exception e)
