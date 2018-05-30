@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Button cancelButton;
+            System.Windows.Forms.ToolStrip toolStrip;
             this.deleteButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -39,15 +40,15 @@
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupButtonsBox = new System.Windows.Forms.GroupBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.statusLabel = new System.Windows.Forms.ToolStripLabel();
             this.downloadButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
+            toolStrip = new System.Windows.Forms.ToolStrip();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupButtonsBox.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // cancelButton
@@ -158,7 +159,7 @@
             // groupButtonsBox
             // 
             this.groupButtonsBox.Controls.Add(this.deleteButton);
-            this.groupButtonsBox.Controls.Add(this.toolStrip1);
+            this.groupButtonsBox.Controls.Add(toolStrip);
             this.groupButtonsBox.Controls.Add(this.downloadButton);
             this.groupButtonsBox.Controls.Add(this.uploadButton);
             this.groupButtonsBox.Controls.Add(this.okButton);
@@ -170,17 +171,17 @@
             this.groupButtonsBox.TabIndex = 1;
             this.groupButtonsBox.TabStop = false;
             // 
-            // toolStrip1
+            // toolStrip
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            toolStrip.Dock = System.Windows.Forms.DockStyle.None;
+            toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar,
             this.statusLabel});
-            this.toolStrip1.Location = new System.Drawing.Point(7, 13);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(12, 25);
-            this.toolStrip1.TabIndex = 4;
-            this.toolStrip1.Text = "toolStrip1";
+            toolStrip.Location = new System.Drawing.Point(7, 13);
+            toolStrip.Name = "toolStrip";
+            toolStrip.Size = new System.Drawing.Size(145, 25);
+            toolStrip.TabIndex = 4;
+            toolStrip.Text = "toolStrip1";
             // 
             // progressBar
             // 
@@ -236,8 +237,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.groupButtonsBox.ResumeLayout(false);
             this.groupButtonsBox.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            toolStrip.ResumeLayout(false);
+            toolStrip.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -248,7 +249,6 @@
         private System.Windows.Forms.GroupBox groupButtonsBox;
         private System.Windows.Forms.Button downloadButton;
         private System.Windows.Forms.Button uploadButton;
-        private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel statusLabel;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
         private System.Windows.Forms.DataGridViewTextBoxColumn num;

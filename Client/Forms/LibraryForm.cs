@@ -146,10 +146,10 @@ namespace SmartReader.Client.Forms
             if (isRemote)
             {
                 if (MessageBox.Show("Do you want to delete the book from your remote library?", "Delete book",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question) == DialogResult.Yes)
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[5].Value);
+                    RemoteBooks.Remove(new BookInfo() { Id = id });
                     DeleteRemoteBook(id);
                     isRemote = false;
                 }
@@ -158,8 +158,7 @@ namespace SmartReader.Client.Forms
             if (isLocal)
             {
                 if (MessageBox.Show("Do you want to delete the book from your local library?", "Delete book",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question) == DialogResult.Yes)
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     Storage.DeleteBook(SelectedBook);
                     isLocal = false;
@@ -167,8 +166,7 @@ namespace SmartReader.Client.Forms
             }
             // Удаляем книжку из таблицы
             if (!(isLocal || isRemote)) dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
-            else if (isLocal) DrawBooksTable();
-            else if (isRemote) OnShown(sender, e);
+            else DrawBooksTable();
         }
 
         // Изменение выбранной строчки в таблице
@@ -183,25 +181,21 @@ namespace SmartReader.Client.Forms
         // Загрузка списка книг после инициализации формы
         private void OnShown(object sender, EventArgs e)
         {
-            if (Token.IsEmpty()) statusLabel.Text = "Not signed";
-            else if (Connection != null)
+            if (IsConnected)
             {
-                statusLabel.Text = "Online";
+                RemoteBooks = null;
 
                 // Загрузка списка книг с сервера
                 for (int i = 0; i < 3 && RemoteBooks == null; i++)
                 {
                     LoadBookList();
                     // Задержка для получения книжек
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(500);
                 }
                 if (RemoteBooks != null)
                 {
                     DrawBooksTable();
-                    UpdateStatusLabel();
-                    return;
                 }
-                else statusLabel.Text = "Can't load books list.";
             }
         }
 
@@ -222,8 +216,6 @@ namespace SmartReader.Client.Forms
             {                
                 IMessage message = MessageFactory.MakeGetBookListMessage(Token);
                 Connection.Send(message);
-                statusLabel.Text = "Loading book list...";
-                progressBar.Visible = true;
             }
         }
 
@@ -236,12 +228,11 @@ namespace SmartReader.Client.Forms
                 string bookText = stream.ReadToEnd();
                 IMessage message = MessageFactory.MakeUploadBookMessage(
                     System.IO.Path.GetFileNameWithoutExtension(book.Path),
-                    bookText,
-                    Token);
+                    bookText, Token);
                 Connection.Send(message);
             }
-            statusLabel.Text = "Uploading...";
-            progressBar.Visible = true;
+            //statusLabel.Text = "Uploading...";
+            //progressBar.Visible = true;
         }
 
         // Загрузка книги с сервера
@@ -249,8 +240,8 @@ namespace SmartReader.Client.Forms
         {
             IMessage message = MessageFactory.MakeGetBookMessage(Token, Convert.ToInt32(dataGridView.SelectedRows[0].Cells[5].Value));
             Connection.Send(message);
-            statusLabel.Text = "Downloading...";
-            progressBar.Visible = true;
+            //statusLabel.Text = "Downloading...";
+            //progressBar.Visible = true;
         }
 
         // Удаление книги с сервера
@@ -273,7 +264,8 @@ namespace SmartReader.Client.Forms
                     OnBookMessage(message as BookMessage);
                     break;
                 case MessageTypes.Status:
-                    UpdateStatusLabel();
+                    //UpdateStatusLabel();
+                    //OnShown(sender, new EventArgs());
                     break;
             }
         }
@@ -287,12 +279,20 @@ namespace SmartReader.Client.Forms
         // Обработка сообщения файлом книги
         private void OnBookMessage(BookMessage book)
         {
+            // 1. Сохраняем книгу как файл
+            string path = @"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader\" + Config.GetValue("Username");
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            File.WriteAllText(path + @"\" + book.Title + ".txt", book.Content);
+
+
             // TODO: 
-            // 1. Сохранить книгу как файл
             // 2. Добавить ссылку на нее в LocalStorage
             // 3. Отобразить ее в dataGridView (поствить галочку)
 
-            UpdateStatusLabel();
+
+            MessageBox.Show("Book successfully downloaded!", "Download book.",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //UpdateStatusLabel();
         }
         #endregion
     }
