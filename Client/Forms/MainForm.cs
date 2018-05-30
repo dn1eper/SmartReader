@@ -20,7 +20,7 @@ namespace SmartReader.Client.Forms
 
         private IConnection Connection;
         private bool IsConnected => Connection != null;
-        private string Token;
+        private string Token => Config.GetValue("Token");
         private string Username;
 
         public MainForm()
@@ -31,14 +31,9 @@ namespace SmartReader.Client.Forms
             // Инициализируем локальное хранилище
             Storage = new LibraryStorage();
             Config = new ConfigStorage();
-            // Загружаем сохраненную информацию о пользователе
-            Token = Config.GetValue("Token");
             Username = Config.GetValue("Username");
             // Открываем последнюю книгу
-            if (Storage.Books.Count > 0)
-            {
-                OpenBook(Storage.Books[Storage.Books.Count - 1]);
-            }
+            OpenLastBook();
             // Пытаемся подключится к серверу
             ConnectServer();
         }
@@ -57,8 +52,8 @@ namespace SmartReader.Client.Forms
         private void OnLibraryDialog(object sender, EventArgs e)
         {
             LibraryForm libraryDialog;
-            if (Connection == null) libraryDialog = new LibraryForm(Storage);
-            else libraryDialog = new LibraryForm(Storage, Connection, Token);  
+            if (Connection == null || Token.IsEmpty()) libraryDialog = new LibraryForm(Storage, Config);
+            else libraryDialog = new LibraryForm(Storage, Config, Connection);  
             
             if (libraryDialog.ShowDialog() == DialogResult.OK)
             {
@@ -84,10 +79,7 @@ namespace SmartReader.Client.Forms
                     switch (accountDialog.ShowDialog())
                     {
                         case DialogResult.No:
-                            // Значит нажата кнопка Logout, забываем Token
-                            Token = "";
-                            Config.SetValue("Token", Token);
-                            UpdateStatusLabel();
+                            Logout();
                             break;
                     }
                 }
@@ -129,7 +121,7 @@ namespace SmartReader.Client.Forms
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 // Если была открыта книжка до этого, закрыаем ее
-                if (book != null) book.Close();
+                if (IsBookOpend) book.Close();
                 // Если эту книжку уже открывали, то нужно октыть ее с сохнененным смещением
                 // для этого нужно получить запись для этой книжки из хранилища
                 BookRecord bookRecord = Storage.GetRecord(openFileDialog.FileName);
@@ -150,11 +142,28 @@ namespace SmartReader.Client.Forms
         // Открывает книжку
         private void OpenBook(BookRecord bookRecord)
         {
+            if (IsBookOpend) book.Close();
+
             book = new Book(bookRecord, richTextBox.Width, richTextBox.Height);
             book.BookOpend += OnBookOpend;
             book.BookClosed += OnBookClosed;
             book.Open();
+
+            if (!Token.IsEmpty()) bookRecord.Owner = Username;
             Storage.AddBook(bookRecord);
+        }
+
+        // Открывает последнюю книгу которую читал пользоатель
+        private void OpenLastBook()
+        {
+            foreach (BookRecord book in Storage.Books)
+            {
+                if ((book.Owner == null && Username == "") || book.Owner == Username)
+                {
+                    OpenBook(book);
+                    return;
+                }
+            }
         }
 
         // Выход из приложения
@@ -184,9 +193,10 @@ namespace SmartReader.Client.Forms
         // Действия при закрытии книжки
         private void OnBookClosed(object sender, EventArgs e)
         {
-            Book oldBook = sender as Book;
+            richTextBox.Text = "";
+            //Book oldBook = sender as Book;
             // Сохраняем сведения о книжке в хранилище
-            Storage.AddBook(oldBook.BookRecord);
+            //Storage.AddBook(oldBook.BookRecord);
         }
 
         // Изменение объема текста на странице в зависимости от размера окна
@@ -242,6 +252,7 @@ namespace SmartReader.Client.Forms
             if (!IsConnected) statusLabel.Text = "Offline";
             else if (Token.IsEmpty()) statusLabel.Text = "Online (not signed)";
             else statusLabel.Text = "Online";
+            Username = Config.GetValue("Username");
         }
         #endregion
 
@@ -280,6 +291,17 @@ namespace SmartReader.Client.Forms
                 IMessage message = MessageFactory.MakeAuthenticateMessage(login, password);
                 Connection.Send(message);
             }
+        }
+
+        // Деаутентификация
+        private void Logout()
+        {
+            if (IsBookOpend) book.Close();
+            Config.SetValue("Token", "");
+            Config.SetValue("Username", "");
+            Username = "";
+            OpenLastBook();
+            UpdateStatusLabel();
         }
 
         // Регистрация
@@ -336,12 +358,15 @@ namespace SmartReader.Client.Forms
         {
             if (message.Status == Status.Ok)
             {
-                Token = message.Token;
+                // Закрываем текущую книгу
+                if (IsBookOpend) book.Close();
                 // Сохраняем токен в конфиг
-                Config.SetValue("Token", Token);
+                Config.SetValue("Token", message.Token);
                 Config.SetValue("Username", Username);
                 // Уведомляем об успешном входе
                 MessageBoxDialog("Login success!", MessageBoxIcon.Information);
+                // Открываем поледнюю книгу
+                OpenLastBook();
             }
             else
             {

@@ -23,8 +23,9 @@ namespace SmartReader.Client.Forms
     public partial class LibraryForm : Form
     {
         private LibraryStorage Storage;
+        private ConfigStorage Config;
         private IConnection Connection;
-        private string Token;
+        private string Token => Config.GetValue("Token");
         private List<BookRecord> LocalBooks => Storage.Books;
         private List<BookInfo> RemoteBooks;
         private bool IsConnected => Connection != null && !Token.IsEmpty();
@@ -36,30 +37,50 @@ namespace SmartReader.Client.Forms
                 if (IsLocalSelectedBook)
                 {
                     string path = dataGridView.SelectedRows[0].Cells[4].Value as string;
-                    int index = LocalBooks.IndexOf(new BookRecord() { Path = path, Offset = 0 });
+                    string owner = Config.GetValue("Username");
+                    if (owner == "") owner = null;
+                    int index = LocalBooks.IndexOf(new BookRecord() { Path = path, Offset = 0, Owner = owner });
                     return LocalBooks[index];
                 }
                 else return null;
             }
         }
-        private bool IsLocalSelectedBook => Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[2].Value);
-        private bool IsRemoteSelectedBook => Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[3].Value);
-        private bool OnSelectionChangedBlock = false;
+        private bool IsLocalSelectedBook {
+            get
+            {
+                if (dataGridView.SelectedRows.Count > 0)
+                {
+                    return Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[2].Value);
+                }
+                else return false;
+            }
+        }
+        private bool IsRemoteSelectedBook
+        {
+            get
+            {
+                if (dataGridView.SelectedRows.Count > 0)
+                {
+                    return Convert.ToBoolean(dataGridView.SelectedRows[0].Cells[3].Value);
+                }
+                else return false;
+            }
+        }
 
-        public LibraryForm(LibraryStorage storage)
+        public LibraryForm(LibraryStorage storage, ConfigStorage config)
         {
             InitializeComponent();
             Storage = storage;
+            Config = config;
             dataGridView.SelectionChanged += OnSelectionChanged;
 
             DrawBooksTable();
         }
-        public LibraryForm(LibraryStorage storage, IConnection connection, string token) : this(storage)
+        public LibraryForm(LibraryStorage storage, ConfigStorage config, IConnection connection) : this(storage, config)
         {
             Connection = connection;
             Connection.MessageReceived += OnIncomingMessage;
-            Token = token;
-
+            
             Shown += OnShown;
         }
 
@@ -67,14 +88,16 @@ namespace SmartReader.Client.Forms
         // Рисует таблицу с книгами
         private void DrawBooksTable()
         {
-            OnSelectionChangedBlock = true;
             int index = -1;
+            int count = 1;
             dataGridView.Rows.Clear();
             // Рисуем Local Books
             while (++index < LocalBooks.Count)
             {
-                dataGridView.Rows.Add(index+1, System.IO.Path.GetFileNameWithoutExtension(LocalBooks[LocalBooks.Count-index-1].Path),
-                    true, false, LocalBooks[LocalBooks.Count-index-1].Path);
+                string owner = LocalBooks[LocalBooks.Count - index - 1].Owner == null ? "" : LocalBooks[LocalBooks.Count - index - 1].Owner;
+                if (owner == Config.GetValue("Username"))
+                    dataGridView.Rows.Add(count++, System.IO.Path.GetFileNameWithoutExtension(LocalBooks[LocalBooks.Count-index-1].Path),
+                        true, false, LocalBooks[LocalBooks.Count-index-1].Path);
             }
             // Рисуем Remote Books
             if (RemoteBooks != null)
@@ -100,11 +123,16 @@ namespace SmartReader.Client.Forms
                     // Иначе добавляем новую строчку
                     if (flag)
                     {
-                        dataGridView.Rows.Add(index++, book.Title, false, true, null, book.Id);
+                        dataGridView.Rows.Add(count++, book.Title, false, true, null, book.Id);
                     }
                 }
             }
-            OnSelectionChangedBlock = false;
+            // Если нет элементов нужно запретить нажатие okButton и deleteButton (при первоначальной отрисовке)
+            if (dataGridView.RowCount == 0)
+            {
+                okButton.Enabled = false;
+                deleteButton.Enabled = false;
+            }
         }
 
         // Удалить книжку локально и с сервера (не файл а ссылку)
@@ -127,12 +155,10 @@ namespace SmartReader.Client.Forms
         // Изменение выбранной строчки в таблице
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (!OnSelectionChangedBlock)
-            {
-                okButton.Enabled = IsLocalSelectedBook;
-                downloadButton.Enabled = IsConnected && !IsLocalSelectedBook && IsRemoteSelectedBook;
-                uploadButton.Enabled = IsConnected && IsLocalSelectedBook && !IsRemoteSelectedBook;
-            }
+            okButton.Enabled = IsLocalSelectedBook;
+            downloadButton.Enabled = IsConnected && !IsLocalSelectedBook && IsRemoteSelectedBook;
+            uploadButton.Enabled = IsConnected && IsLocalSelectedBook && !IsRemoteSelectedBook;
+            deleteButton.Enabled = true;
         }
 
         // Загрузка списка книг после инициализации формы

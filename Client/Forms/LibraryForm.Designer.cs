@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Button cancelButton;
-            System.Windows.Forms.Button deleteButton;
+            this.deleteButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.num = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,7 +45,6 @@
             this.downloadButton = new System.Windows.Forms.Button();
             this.uploadButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
-            deleteButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupButtonsBox.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -64,14 +63,14 @@
             // 
             // deleteButton
             // 
-            deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            deleteButton.Location = new System.Drawing.Point(268, 13);
-            deleteButton.Name = "deleteButton";
-            deleteButton.Size = new System.Drawing.Size(75, 23);
-            deleteButton.TabIndex = 5;
-            deleteButton.Text = "Delete";
-            deleteButton.UseVisualStyleBackColor = true;
-            deleteButton.Click += new System.EventHandler(this.OnDelete);
+            this.deleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.deleteButton.Location = new System.Drawing.Point(268, 13);
+            this.deleteButton.Name = "deleteButton";
+            this.deleteButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteButton.TabIndex = 5;
+            this.deleteButton.Text = "Delete";
+            this.deleteButton.UseVisualStyleBackColor = true;
+            this.deleteButton.Click += new System.EventHandler(this.OnDelete);
             // 
             // okButton
             // 
@@ -158,7 +157,7 @@
             // 
             // groupButtonsBox
             // 
-            this.groupButtonsBox.Controls.Add(deleteButton);
+            this.groupButtonsBox.Controls.Add(this.deleteButton);
             this.groupButtonsBox.Controls.Add(this.toolStrip1);
             this.groupButtonsBox.Controls.Add(this.downloadButton);
             this.groupButtonsBox.Controls.Add(this.uploadButton);
@@ -259,5 +258,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button deleteButton;
     }
 }

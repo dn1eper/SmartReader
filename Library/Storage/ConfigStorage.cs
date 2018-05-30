@@ -4,6 +4,8 @@ using System.IO;
 
 namespace SmartReader.Library.Storage
 {
+    // Config.Type = "Token" | "Username"
+
     public class ConfigStorage : XmlStorage
     {
         public List<ConfigRecord> Configs { get; private set; }
