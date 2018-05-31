@@ -92,6 +92,7 @@ namespace SmartReader.Client.Forms
             int index = -1;
             int count = 1;
             dataGridView.Rows.Clear();
+            dataGridView.Refresh();
             // Рисуем Local Books
             while (++index < LocalBooks.Count)
             {
@@ -223,7 +224,7 @@ namespace SmartReader.Client.Forms
         private void OnUpload(object sender, EventArgs e)
         {
             BookRecord book = SelectedBook;
-            using (StreamReader stream = new StreamReader(SelectedBook.Path))
+            using (StreamReader stream = new StreamReader(SelectedBook.Path, Encoding.UTF8))
             {
                 string bookText = stream.ReadToEnd();
                 IMessage message = MessageFactory.MakeUploadBookMessage(
@@ -283,8 +284,7 @@ namespace SmartReader.Client.Forms
             string path = @"C:\Users\" + Environment.UserName.ToString() + @"\SmartReader\" + Config.GetValue("Username");
             string fullPath = path + @"\" + book.Title + ".txt";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            File.WriteAllText(fullPath, book.Content);
-
+            File.WriteAllBytes(fullPath, book.Content);
             // 2. Добавляем ссылку на книгу в LocalStorage
             Storage.AddBook(new BookRecord() { Path = fullPath, Offset = 0, Owner = Config.GetValue("Username") });
 

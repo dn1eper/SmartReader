@@ -54,11 +54,11 @@ namespace SmartReader.Message
         }
         public static IMessage MakeBookMessage(int bookId, string content, string title)
         {
-            return new BookMessage() { Content = Encoding.Default.GetBytes(content), BookId = bookId };
+            return new BookMessage() { Content = Encoding.Default.GetBytes(content), BookId = bookId, Title = title };
         }
-        public static IMessage MakeBookMessage(int bookId, byte[] content)
+        public static IMessage MakeBookMessage(int bookId, byte[] content, string title)
         {
-            return new BookMessage() { Content = content, BookId = bookId };
+            return new BookMessage() { Content = content, BookId = bookId, Title = title };
         }
 
         public static IMessage MakeDeleteBookMessage(string token, int bookId)

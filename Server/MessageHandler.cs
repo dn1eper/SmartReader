@@ -178,7 +178,8 @@ namespace SmartReader.Server
             try
             {
                 byte[] content = Conn.GetBookContent(bookId);
-                connection.Send(MessageFactory.MakeBookMessage(bookId, content));
+                string title = Conn.GetBookTitle(bookId);
+                connection.Send(MessageFactory.MakeBookMessage(bookId, content, title));
             }
             catch (Exception e)
             {
