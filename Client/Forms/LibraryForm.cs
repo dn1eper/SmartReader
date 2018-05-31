@@ -167,7 +167,7 @@ namespace SmartReader.Client.Forms
             }
             // Удаляем книжку из таблицы
             if (!(isLocal || isRemote)) dataGridView.Rows.Remove(dataGridView.SelectedRows[0]);
-            else DrawBooksTable();
+            else UpdateCheckBox(isLocal, isRemote);
         }
 
         // Изменение выбранной строчки в таблице
@@ -207,6 +207,20 @@ namespace SmartReader.Client.Forms
             else statusLabel.Text = "Online";
             progressBar.Visible = false;
         }
+
+        private void UpdateCheckBox(bool local, bool remote)
+        {
+            if (dataGridView.SelectedRows.Count > 0)
+            {
+                DataGridViewRow row = dataGridView.SelectedRows[0];
+                object num = row.Cells[0].Value;
+                object title = row.Cells[1].Value;
+                object path = row.Cells[4].Value;
+                object id = row.Cells[5].Value;
+                dataGridView.Rows.Remove(row);
+                dataGridView.Rows.Add(num, title, local, remote, path, id);
+            }
+        }
         #endregion
 
         #region Сетевые события
@@ -230,7 +244,9 @@ namespace SmartReader.Client.Forms
                 System.IO.Path.GetFileNameWithoutExtension(book.Path),
                 buffer, Token);
             Connection.Send(message);
-            
+
+            // fix
+            UpdateCheckBox(true, true);
             //statusLabel.Text = "Uploading...";
             //progressBar.Visible = true;
         }
@@ -287,8 +303,9 @@ namespace SmartReader.Client.Forms
             // 2. Добавляем ссылку на книгу в LocalStorage
             Storage.AddBook(new BookRecord() { Path = fullPath, Offset = 0, Owner = Config.GetValue("Username") });
 
-            // 3. Отобразить ее в dataGridView (поствить галочку)
-            DrawBooksTable();
+            // 3. Отобразить ее в dataGridView (поствить галочку LocalBooks)
+            //DrawBooksTable();
+            UpdateCheckBox(true, true);
 
             MessageBox.Show("Book successfully downloaded!", "Download book.",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
