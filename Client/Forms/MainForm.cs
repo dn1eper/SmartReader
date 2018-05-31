@@ -57,7 +57,7 @@ namespace SmartReader.Client.Forms
                 {
                     // Открываем выбранную книгу
                     BookRecord selectedBook = libraryDialog.SelectedBook;
-                    if (selectedBook != book.BookRecord) OpenBook(selectedBook);
+                    if (!IsBookOpend || selectedBook != book.BookRecord) OpenBook(selectedBook);
                 }
             }
         }
@@ -363,7 +363,7 @@ namespace SmartReader.Client.Forms
             if (message.Status == Status.Ok)
             {
                 // Закрываем текущую книгу
-                if (IsBookOpend) book.Close();
+                //if (IsBookOpend) book.Close();
                 // Сохраняем токен в конфиг
                 Config.SetValue("Token", message.Token);
                 Config.SetValue("Username", Username);
