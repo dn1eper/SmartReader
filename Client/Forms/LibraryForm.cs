@@ -224,14 +224,13 @@ namespace SmartReader.Client.Forms
         private void OnUpload(object sender, EventArgs e)
         {
             BookRecord book = SelectedBook;
-            using (StreamReader stream = new StreamReader(SelectedBook.Path, Encoding.UTF8))
-            {
-                string bookText = stream.ReadToEnd();
-                IMessage message = MessageFactory.MakeUploadBookMessage(
-                    System.IO.Path.GetFileNameWithoutExtension(book.Path),
-                    bookText, Token);
-                Connection.Send(message);
-            }
+            byte[] buffer = File.ReadAllBytes(SelectedBook.Path);
+            
+            IMessage message = MessageFactory.MakeUploadBookMessage(
+                System.IO.Path.GetFileNameWithoutExtension(book.Path),
+                buffer, Token);
+            Connection.Send(message);
+            
             //statusLabel.Text = "Uploading...";
             //progressBar.Visible = true;
         }
