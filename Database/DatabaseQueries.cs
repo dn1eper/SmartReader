@@ -205,7 +205,17 @@ namespace SmartReader.Database
         {
             MySqlCommand cmd = new MySqlCommand(Query["get-book-title"], Conn);
             cmd.Parameters.AddWithValue("@BookId", bookId);
-            return GetOneStringValue(cmd);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    return Encoding.Default.GetString(GetBytesFromColumn(reader, 0));
+                }
+                else
+                {
+                    throw new Exception("Нет данных или ошибка во время получения книги.");
+                }
+            }
         }
 
         public void DeleteBook(int bookId)
